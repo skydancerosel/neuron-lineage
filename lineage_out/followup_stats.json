@@ -1,0 +1,1413 @@
+{
+ "power": {
+  "layers": {
+   "6": {
+    "role": {
+     "fpr": 0.071,
+     "mean_power": 0.493,
+     "observed_excess": 0.0531
+    },
+    "genre": {
+     "fpr": 0.048,
+     "mean_power": 0.292,
+     "observed_excess": 0.0286
+    }
+   },
+   "12": {
+    "role": {
+     "fpr": 0.039,
+     "mean_power": 0.473,
+     "observed_excess": 0.0206
+    },
+    "genre": {
+     "fpr": 0.03,
+     "mean_power": 0.271,
+     "observed_excess": -0.0126
+    }
+   },
+   "18": {
+    "role": {
+     "fpr": 0.047,
+     "mean_power": 0.46,
+     "observed_excess": 0.0318
+    },
+    "genre": {
+     "fpr": 0.036,
+     "mean_power": 0.273,
+     "observed_excess": 0.0312
+    }
+   }
+  },
+  "role": {
+   "observed_excess": 0.0382,
+   "corrected_excess": 0.0973,
+   "ci": [
+    0.0678,
+    0.1269
+   ],
+   "range_by_power": [
+    0.0748,
+    0.1586
+   ]
+  },
+  "genre": {
+   "observed_excess": 0.0166,
+   "corrected_excess": 0.0759,
+   "ci": [
+    0.0312,
+    0.1226
+   ],
+   "range_by_power": [
+    0.063,
+    0.0865
+   ]
+  },
+  "role_minus_genre": {
+   "corrected": 0.0214,
+   "ci": [
+    -0.0317,
+    0.0727
+   ],
+   "share_boot_above_0": 0.799
+  }
+ },
+ "windows": {
+  "neuron": {
+   "rows": [
+    {
+     "window": "256\u2013512",
+     "n": 999,
+     "role": 112,
+     "cross": 90,
+     "role_share": 0.1121
+    },
+    {
+     "window": "1,000\u20132,000",
+     "n": 1883,
+     "role": 175,
+     "cross": 138,
+     "role_share": 0.0929
+    },
+    {
+     "window": "4,000\u20138,000",
+     "n": 837,
+     "role": 101,
+     "cross": 87,
+     "role_share": 0.1207
+    },
+    {
+     "window": "16,000+",
+     "n": 306,
+     "role": 29,
+     "cross": 24,
+     "role_share": 0.0948
+    }
+   ],
+   "early_share": {
+    "all_new": 0.716,
+    "role_adjacent": 0.688,
+    "cross_genre": 0.673
+   },
+   "early_vs_late_role_rate": {
+    "early": 0.0996,
+    "late": 0.1137,
+    "p_two_sided": 0.1874
+   }
+  },
+  "random": {
+   "rows": [
+    {
+     "window": "256\u2013512",
+     "n": 784,
+     "role": 60,
+     "cross": 52,
+     "role_share": 0.0765
+    },
+    {
+     "window": "1,000\u20132,000",
+     "n": 1757,
+     "role": 106,
+     "cross": 88,
+     "role_share": 0.0603
+    },
+    {
+     "window": "4,000\u20138,000",
+     "n": 472,
+     "role": 30,
+     "cross": 19,
+     "role_share": 0.0636
+    },
+    {
+     "window": "16,000+",
+     "n": 139,
+     "role": 10,
+     "cross": 9,
+     "role_share": 0.0719
+    }
+   ],
+   "early_share": {
+    "all_new": 0.806,
+    "role_adjacent": 0.806,
+    "cross_genre": 0.833
+   },
+   "early_vs_late_role_rate": {
+    "early": 0.0653,
+    "late": 0.0655,
+    "p_two_sided": 1.0
+   }
+  },
+  "excess_by_window": [
+   {
+    "window": "256\u2013512",
+    "neuron": 0.1121,
+    "random": 0.0765,
+    "p": 0.0069
+   },
+   {
+    "window": "1,000\u20132,000",
+    "neuron": 0.0929,
+    "random": 0.0603,
+    "p": 0.0001
+   },
+   {
+    "window": "4,000\u20138,000",
+    "neuron": 0.1207,
+    "random": 0.0636,
+    "p": 0.0005
+   },
+   {
+    "window": "16,000+",
+    "neuron": 0.0948,
+    "random": 0.0719,
+    "p": 0.2757
+   }
+  ]
+ },
+ "fade": {
+  "step0": {
+   "neuron_faded": {
+    "n": 441,
+    "probe_step0": [
+     0.645,
+     0.76,
+     0.86
+    ],
+    "best_step0": [
+     0.541,
+     0.617,
+     0.722
+    ],
+    "own_step0": [
+     0.47,
+     0.537,
+     0.629
+    ],
+    "probe_end": [
+     0.79,
+     0.897,
+     0.967
+    ],
+    "best_end": [
+     0.662,
+     0.767,
+     0.883
+    ],
+    "own_end": [
+     0.444,
+     0.542,
+     0.688
+    ],
+    "probe_gain": [
+     0.014,
+     0.097,
+     0.226
+    ],
+    "share_gain_above_0": 0.8
+   },
+   "neuron_stayed": {
+    "n": 224,
+    "probe_step0": [
+     0.581,
+     0.708,
+     0.8335
+    ],
+    "best_step0": [
+     0.5108,
+     0.595,
+     0.7032
+    ],
+    "own_step0": [
+     0.4557,
+     0.511,
+     0.593
+    ],
+    "probe_end": [
+     0.9065,
+     0.967,
+     0.994
+    ],
+    "best_end": [
+     0.791,
+     0.8975,
+     0.961
+    ],
+    "own_end": [
+     0.7785,
+     0.8915,
+     0.956
+    ],
+    "probe_gain": [
+     0.1058,
+     0.227,
+     0.347
+    ],
+    "share_gain_above_0": 0.955
+   },
+   "neuron_random": {
+    "n": 120,
+    "probe_step0": [
+     0.463,
+     0.5035,
+     0.5463
+    ],
+    "best_step0": [
+     0.4657,
+     0.503,
+     0.5403
+    ],
+    "own_step0": null,
+    "probe_end": [
+     0.441,
+     0.504,
+     0.5593
+    ],
+    "best_end": [
+     0.4415,
+     0.5005,
+     0.5555
+    ],
+    "own_end": null,
+    "probe_gain": [
+     -0.0705,
+     -0.0155,
+     0.0742
+    ],
+    "share_gain_above_0": 0.433
+   },
+   "random_faded": {
+    "n": 440,
+    "probe_step0": [
+     0.618,
+     0.7225,
+     0.85
+    ],
+    "best_step0": [
+     0.529,
+     0.6025,
+     0.7302
+    ],
+    "own_step0": [
+     0.47,
+     0.539,
+     0.619
+    ],
+    "probe_end": [
+     0.77,
+     0.884,
+     0.96
+    ],
+    "best_end": [
+     0.626,
+     0.74,
+     0.86
+    ],
+    "own_end": [
+     0.445,
+     0.529,
+     0.622
+    ],
+    "probe_gain": [
+     0.018,
+     0.1115,
+     0.26
+    ],
+    "share_gain_above_0": 0.786
+   },
+   "random_stayed": {
+    "n": 223,
+    "probe_step0": [
+     0.64,
+     0.742,
+     0.8415
+    ],
+    "best_step0": [
+     0.5225,
+     0.616,
+     0.716
+    ],
+    "own_step0": [
+     0.4625,
+     0.519,
+     0.587
+    ],
+    "probe_end": [
+     0.868,
+     0.94,
+     0.989
+    ],
+    "best_end": [
+     0.709,
+     0.834,
+     0.936
+    ],
+    "own_end": [
+     0.6375,
+     0.769,
+     0.87
+    ],
+    "probe_gain": [
+     0.0645,
+     0.164,
+     0.2725
+    ],
+    "share_gain_above_0": 0.888
+   },
+   "random_random": {
+    "n": 120,
+    "probe_step0": [
+     0.455,
+     0.497,
+     0.5378
+    ],
+    "best_step0": [
+     0.465,
+     0.491,
+     0.529
+    ],
+    "own_step0": null,
+    "probe_end": [
+     0.4407,
+     0.4995,
+     0.545
+    ],
+    "best_end": [
+     0.432,
+     0.4875,
+     0.545
+    ],
+    "own_end": null,
+    "probe_gain": [
+     -0.0698,
+     -0.001,
+     0.0627
+    ],
+    "share_gain_above_0": 0.492
+   },
+   "coherent": {
+    "n": 61,
+    "probe_step0": [
+     0.527,
+     0.59,
+     0.683
+    ],
+    "probe_end": [
+     0.61,
+     0.689,
+     0.841
+    ],
+    "probe_gain": [
+     0.016,
+     0.078,
+     0.175
+    ]
+   },
+   "no_valid_fold": 1,
+   "faded_vs_coherent_adjusted": {
+    "excess_gain": 0.128,
+    "t": 7.01,
+    "raw_excess": 0.019
+   },
+   "faded_vs_coherent_gain_p": 0.1874
+  },
+  "ablate": {
+   "faded": {
+    "n": 441,
+    "kl_real": [
+     0.0019,
+     0.0044,
+     0.0103
+    ],
+    "kl_kick": [
+     0.0017,
+     0.0039,
+     0.0092
+    ],
+    "ratio": [
+     0.8386,
+     1.064,
+     1.5165
+    ],
+    "share_real_above_kick": 0.56,
+    "p_real_vs_kick": 8.5e-05,
+    "p_dloss_real_vs_kick": 0.003863,
+    "kl_real_neg": [
+     0.0004,
+     0.0011,
+     0.0024
+    ],
+    "dloss_real": [
+     -0.0059,
+     0.0063,
+     0.0241
+    ],
+    "dloss_kick": [
+     -0.0079,
+     0.0027,
+     0.0174
+    ],
+    "shift": [
+     2.706,
+     3.881,
+     5.825
+    ],
+    "kl_own": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "dloss_own": [
+     -0.0004,
+     0.0,
+     0.0004
+    ]
+   },
+   "stayed": {
+    "n": 224,
+    "kl_real": [
+     0.0042,
+     0.0101,
+     0.0191
+    ],
+    "kl_kick": [
+     0.0036,
+     0.0093,
+     0.019
+    ],
+    "ratio": [
+     0.8463,
+     1.0816,
+     1.4434
+    ],
+    "share_real_above_kick": 0.594,
+    "p_real_vs_kick": 0.000546,
+    "p_dloss_real_vs_kick": 0.043574,
+    "kl_real_neg": [
+     0.0003,
+     0.0011,
+     0.0027
+    ],
+    "dloss_real": [
+     -0.0075,
+     0.0076,
+     0.0392
+    ],
+    "dloss_kick": [
+     -0.0183,
+     0.0037,
+     0.0303
+    ],
+    "shift": [
+     3.9352,
+     5.584,
+     7.6963
+    ],
+    "kl_own": [
+     0.0001,
+     0.0001,
+     0.0003
+    ],
+    "dloss_own": [
+     -0.0023,
+     0.0,
+     0.0026
+    ]
+   },
+   "coherent": {
+    "n": 61,
+    "kl_real": [
+     0.0004,
+     0.0011,
+     0.0028
+    ],
+    "kl_kick": [
+     0.0003,
+     0.0009,
+     0.0021
+    ],
+    "ratio": [
+     0.9054,
+     1.2917,
+     1.7506
+    ],
+    "share_real_above_kick": 0.656,
+    "p_real_vs_kick": 0.00585,
+    "p_dloss_real_vs_kick": 0.475658,
+    "kl_real_neg": [
+     0.0002,
+     0.0005,
+     0.0019
+    ],
+    "dloss_real": [
+     -0.0076,
+     -0.0004,
+     0.0066
+    ],
+    "dloss_kick": [
+     -0.0072,
+     0.0014,
+     0.0085
+    ],
+    "shift": [
+     1.52,
+     2.106,
+     2.769
+    ]
+   },
+   "p_faded_vs_coherent_ratio": 0.9478,
+   "p_faded_vs_stayed_ratio": 0.7516
+  },
+  "ablate_all": {
+   "faded": {
+    "n": 441,
+    "kl_real": [
+     0.0023,
+     0.0059,
+     0.0124
+    ],
+    "kl_kick": [
+     0.0022,
+     0.005,
+     0.0114
+    ],
+    "ratio": [
+     0.8023,
+     1.0506,
+     1.4552
+    ],
+    "share_real_above_kick": 0.535,
+    "p_real_vs_kick": 0.002271,
+    "p_dloss_real_vs_kick": 0.028639,
+    "kl_real_neg": [
+     0.0007,
+     0.0018,
+     0.0035
+    ],
+    "dloss_real": [
+     -0.0072,
+     0.0069,
+     0.0303
+    ],
+    "dloss_kick": [
+     -0.0084,
+     0.0039,
+     0.0234
+    ],
+    "shift": [
+     2.706,
+     3.881,
+     5.825
+    ],
+    "kl_own": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "dloss_own": [
+     -0.0009,
+     0.0,
+     0.0007
+    ],
+    "dspan_real": [
+     -0.0008,
+     0.0022,
+     0.0068
+    ],
+    "dspan_kick": [
+     -0.0011,
+     0.0018,
+     0.006
+    ],
+    "p_dspan_real_vs_kick": 0.2034,
+    "dspan_own": [
+     -0.0003,
+     0.0,
+     0.0003
+    ]
+   },
+   "stayed": {
+    "n": 224,
+    "kl_real": [
+     0.0048,
+     0.0107,
+     0.0216
+    ],
+    "kl_kick": [
+     0.0044,
+     0.0114,
+     0.0217
+    ],
+    "ratio": [
+     0.8332,
+     1.0517,
+     1.4014
+    ],
+    "share_real_above_kick": 0.567,
+    "p_real_vs_kick": 0.005494,
+    "p_dloss_real_vs_kick": 0.045622,
+    "kl_real_neg": [
+     0.0006,
+     0.0017,
+     0.0034
+    ],
+    "dloss_real": [
+     -0.0083,
+     0.0082,
+     0.0433
+    ],
+    "dloss_kick": [
+     -0.0144,
+     0.0057,
+     0.0322
+    ],
+    "shift": [
+     3.9352,
+     5.584,
+     7.6963
+    ],
+    "kl_own": [
+     0.0001,
+     0.0002,
+     0.0003
+    ],
+    "dloss_own": [
+     -0.003,
+     0.0001,
+     0.0031
+    ],
+    "dspan_real": [
+     -0.0008,
+     0.0029,
+     0.0086
+    ],
+    "dspan_kick": [
+     -0.0012,
+     0.0023,
+     0.007
+    ],
+    "p_dspan_real_vs_kick": 0.2467,
+    "dspan_own": [
+     -0.0006,
+     0.0001,
+     0.0008
+    ]
+   },
+   "coherent": {
+    "n": 61,
+    "kl_real": [
+     0.0008,
+     0.0015,
+     0.0031
+    ],
+    "kl_kick": [
+     0.0006,
+     0.0014,
+     0.0032
+    ],
+    "ratio": [
+     0.8876,
+     1.2581,
+     1.731
+    ],
+    "share_real_above_kick": 0.672,
+    "p_real_vs_kick": 0.015308,
+    "p_dloss_real_vs_kick": 0.357062,
+    "kl_real_neg": [
+     0.0005,
+     0.001,
+     0.0023
+    ],
+    "dloss_real": [
+     -0.0064,
+     0.0003,
+     0.0113
+    ],
+    "dloss_kick": [
+     -0.0068,
+     0.001,
+     0.0109
+    ],
+    "shift": [
+     1.52,
+     2.106,
+     2.769
+    ],
+    "dspan_real": [
+     -0.0006,
+     0.0009,
+     0.0038
+    ],
+    "dspan_kick": [
+     -0.0019,
+     0.0003,
+     0.0037
+    ],
+    "p_dspan_real_vs_kick": 0.1634
+   },
+   "p_faded_vs_coherent_ratio": 0.9761,
+   "p_faded_vs_stayed_ratio": 0.8834
+  },
+  "sae": {
+   "latents": 32768,
+   "neuron_faded": {
+    "n": 441,
+    "probe": [
+     0.788,
+     0.896,
+     0.968
+    ],
+    "unit": [
+     0.665,
+     0.778,
+     0.886
+    ],
+    "sae": [
+     0.655,
+     0.787,
+     0.895
+    ],
+    "random_m": [
+     0.649,
+     0.772,
+     0.864
+    ],
+    "sae_minus_unit": [
+     -0.063,
+     0.005,
+     0.077
+    ],
+    "p_sae_vs_unit": 0.279565,
+    "share_sae_ge_0.89": 0.263,
+    "fires_pos": [
+     0.75,
+     0.909,
+     1.0
+    ],
+    "fires_neg": [
+     0.107,
+     0.235,
+     0.415
+    ]
+   },
+   "neuron_stayed": {
+    "n": 224,
+    "probe": [
+     0.9055,
+     0.971,
+     0.992
+    ],
+    "unit": [
+     0.7885,
+     0.887,
+     0.961
+    ],
+    "sae": [
+     0.7758,
+     0.885,
+     0.9552
+    ],
+    "random_m": [
+     0.7735,
+     0.8665,
+     0.9482
+    ],
+    "sae_minus_unit": [
+     -0.0555,
+     -0.0015,
+     0.041
+    ],
+    "p_sae_vs_unit": 0.829398,
+    "share_sae_ge_0.89": 0.487,
+    "fires_pos": [
+     0.9,
+     1.0,
+     1.0
+    ],
+    "fires_neg": [
+     0.062,
+     0.175,
+     0.3875
+    ]
+   },
+   "neuron_random": {
+    "n": 120,
+    "probe": [
+     0.4477,
+     0.5105,
+     0.5523
+    ],
+    "unit": [
+     0.4297,
+     0.4825,
+     0.5515
+    ],
+    "sae": [
+     0.485,
+     0.495,
+     0.52
+    ],
+    "random_m": [
+     0.4465,
+     0.48,
+     0.5315
+    ],
+    "sae_minus_unit": [
+     -0.0393,
+     0.0135,
+     0.07
+    ],
+    "p_sae_vs_unit": 0.082168,
+    "share_sae_ge_0.89": 0.0,
+    "fires_pos": [
+     0.15,
+     0.15,
+     0.3
+    ],
+    "fires_neg": [
+     0.01,
+     0.03,
+     0.1313
+    ]
+   },
+   "neuron_coherent": {
+    "n": 61,
+    "probe": [
+     0.59,
+     0.694,
+     0.85
+    ],
+    "unit": [
+     0.514,
+     0.589,
+     0.717
+    ],
+    "sae": [
+     0.509,
+     0.597,
+     0.7
+    ],
+    "random_m": [
+     0.542,
+     0.617,
+     0.685
+    ],
+    "sae_minus_unit": [
+     -0.067,
+     0.005,
+     0.086
+    ],
+    "p_sae_vs_unit": 0.514325,
+    "share_sae_ge_0.89": 0.033,
+    "fires_pos": [
+     0.5,
+     0.636,
+     0.824
+    ],
+    "fires_neg": [
+     0.112,
+     0.225,
+     0.381
+    ]
+   },
+   "random_faded": {
+    "n": 441,
+    "probe": [
+     0.757,
+     0.886,
+     0.96
+    ],
+    "unit": [
+     0.627,
+     0.751,
+     0.86
+    ],
+    "sae": [
+     0.632,
+     0.75,
+     0.88
+    ],
+    "random_m": [
+     0.642,
+     0.773,
+     0.867
+    ],
+    "sae_minus_unit": [
+     -0.052,
+     0.02,
+     0.08
+    ],
+    "p_sae_vs_unit": 0.001468,
+    "share_sae_ge_0.89": 0.227,
+    "fires_pos": [
+     0.75,
+     0.905,
+     1.0
+    ],
+    "fires_neg": [
+     0.127,
+     0.28,
+     0.491
+    ]
+   },
+   "random_stayed": {
+    "n": 223,
+    "probe": [
+     0.864,
+     0.943,
+     0.986
+    ],
+    "unit": [
+     0.69,
+     0.842,
+     0.937
+    ],
+    "sae": [
+     0.712,
+     0.85,
+     0.945
+    ],
+    "random_m": [
+     0.7165,
+     0.84,
+     0.9305
+    ],
+    "sae_minus_unit": [
+     -0.036,
+     0.015,
+     0.064
+    ],
+    "p_sae_vs_unit": 0.006314,
+    "share_sae_ge_0.89": 0.422,
+    "fires_pos": [
+     0.8785,
+     0.973,
+     1.0
+    ],
+    "fires_neg": [
+     0.0945,
+     0.22,
+     0.431
+    ]
+   },
+   "random_random": {
+    "n": 120,
+    "probe": [
+     0.4435,
+     0.491,
+     0.5555
+    ],
+    "unit": [
+     0.4387,
+     0.488,
+     0.5438
+    ],
+    "sae": [
+     0.484,
+     0.495,
+     0.5
+    ],
+    "random_m": [
+     0.4265,
+     0.482,
+     0.5328
+    ],
+    "sae_minus_unit": [
+     -0.05,
+     0.0065,
+     0.0542
+    ],
+    "p_sae_vs_unit": 0.340475,
+    "share_sae_ge_0.89": 0.0,
+    "fires_pos": [
+     0.15,
+     0.15,
+     0.2
+    ],
+    "fires_neg": [
+     0.0,
+     0.0205,
+     0.0503
+    ]
+   },
+   "quality": {
+    "6": {
+     "fve": 0.6297,
+     "dead_frac": 0.005,
+     "ce": {
+      "clean": 2.0984,
+      "sae": 2.1258,
+      "mean": 2.1775
+     },
+     "loss_recovered": 0.6534
+    },
+    "12": {
+     "fve": 0.6561,
+     "dead_frac": 0.1581,
+     "ce": {
+      "clean": 2.0984,
+      "sae": 2.1279,
+      "mean": 2.1761
+     },
+     "loss_recovered": 0.6197
+    },
+    "18": {
+     "fve": 0.7511,
+     "dead_frac": 0.1992,
+     "ce": {
+      "clean": 2.0984,
+      "sae": 2.1326,
+      "mean": 2.2053
+     },
+     "loss_recovered": 0.6802
+    }
+   }
+  }
+ },
+ "sizes": {
+  "410m": {
+   "layers": {
+    "6": {
+     "neuron": {
+      "n": 1762,
+      "role": 0.1209,
+      "genre": 0.0795
+     },
+     "random": {
+      "n": 1652,
+      "role": 0.0678,
+      "genre": 0.0508
+     },
+     "p_role": 6.922833029132116e-08,
+     "p_genre": 0.0004469468328968209
+    },
+    "12": {
+     "neuron": {
+      "n": 1441,
+      "role": 0.0944,
+      "genre": 0.052
+     },
+     "random": {
+      "n": 773,
+      "role": 0.0737,
+      "genre": 0.0647
+     },
+     "p_role": 0.05787127163680139,
+     "p_genre": 0.9064064138343759
+    },
+    "18": {
+     "neuron": {
+      "n": 822,
+      "role": 0.0827,
+      "genre": 0.056
+     },
+     "random": {
+      "n": 727,
+      "role": 0.0509,
+      "genre": 0.0248
+     },
+     "p_role": 0.00814199163867069,
+     "p_genre": 0.001348251293768605
+    },
+    "pooled": {
+     "neuron": {
+      "n": 4025,
+      "role": 0.1036,
+      "genre": 0.0648
+     },
+     "random": {
+      "n": 3152,
+      "role": 0.0654,
+      "genre": 0.0482
+     },
+     "p_role": 4.85704634834399e-09,
+     "p_genre": 0.00149709344239098
+    }
+   },
+   "boot_role_excess": [
+    0.0381,
+    0.0243,
+    0.051
+   ],
+   "per_unit": {
+    "neuron": {
+     "role_adjacent": 0.271,
+     "unparented": 2.349,
+     "tested": 2.62
+    },
+    "random": {
+     "role_adjacent": 0.134,
+     "unparented": 1.918,
+     "tested": 2.052
+    }
+   },
+   "corrected_range": {
+    "neuron": {
+     "lo": 0.0517,
+     "hi": 0.2846
+    },
+    "random": {
+     "lo": 0.0,
+     "hi": 0.1163
+    }
+   },
+   "controls": [
+    {
+     "layer": 6,
+     "fpr": {
+      "genre": 0.048,
+      "role": 0.071
+     },
+     "mean_power": {
+      "genre": 0.292,
+      "role": 0.493
+     },
+     "no_change": 0.091
+    },
+    {
+     "layer": 12,
+     "fpr": {
+      "genre": 0.03,
+      "role": 0.039
+     },
+     "mean_power": {
+      "genre": 0.271,
+      "role": 0.473
+     },
+     "no_change": 0.056
+    },
+    {
+     "layer": 18,
+     "fpr": {
+      "genre": 0.036,
+      "role": 0.047
+     },
+     "mean_power": {
+      "genre": 0.273,
+      "role": 0.46
+     },
+     "no_change": 0.065
+    }
+   ],
+   "power_corrected": {
+    "role": {
+     "observed_excess": 0.0382,
+     "corrected_excess": 0.0973,
+     "ci": [
+      0.0678,
+      0.1269
+     ],
+     "range_by_power": [
+      0.0748,
+      0.1586
+     ]
+    },
+    "genre": {
+     "observed_excess": 0.0166,
+     "corrected_excess": 0.0759,
+     "ci": [
+      0.0312,
+      0.1226
+     ],
+     "range_by_power": [
+      0.063,
+      0.0865
+     ]
+    },
+    "role_minus_genre": {
+     "corrected": 0.0214,
+     "ci": [
+      -0.0317,
+      0.0727
+     ],
+     "share_boot_above_0": 0.799
+    }
+   }
+  },
+  "1.4b": {
+   "layers": {
+    "6": {
+     "neuron": {
+      "n": 1173,
+      "role": 0.0904,
+      "genre": 0.052
+     },
+     "random": {
+      "n": 678,
+      "role": 0.0516,
+      "genre": 0.0398
+     },
+     "p_role": 0.0013249156736711819,
+     "p_genre": 0.14123354615332337
+    },
+    "12": {
+     "neuron": {
+      "n": 645,
+      "role": 0.1194,
+      "genre": 0.062
+     },
+     "random": {
+      "n": 212,
+      "role": 0.066,
+      "genre": 0.0566
+     },
+     "p_role": 0.01666430119888748,
+     "p_genre": 0.46184584337919726
+    },
+    "18": {
+     "neuron": {
+      "n": 460,
+      "role": 0.1022,
+      "genre": 0.0761
+     },
+     "random": {
+      "n": 198,
+      "role": 0.0556,
+      "genre": 0.0354
+     },
+     "p_role": 0.03358112045483924,
+     "p_genre": 0.032437703008175015
+    },
+    "pooled": {
+     "neuron": {
+      "n": 2278,
+      "role": 0.101,
+      "genre": 0.0597
+     },
+     "random": {
+      "n": 1088,
+      "role": 0.0551,
+      "genre": 0.0423
+     },
+     "p_role": 3.156293523862205e-06,
+     "p_genre": 0.02071117571108439
+    }
+   },
+   "boot_role_excess": [
+    0.0458,
+    0.0261,
+    0.0647
+   ],
+   "per_unit": {
+    "neuron": {
+     "role_adjacent": 0.15,
+     "unparented": 1.333,
+     "tested": 1.483
+    },
+    "random": {
+     "role_adjacent": 0.039,
+     "unparented": 0.669,
+     "tested": 0.708
+    }
+   },
+   "corrected_range": {
+    "neuron": {
+     "lo": 0.0634,
+     "hi": 0.2735
+    },
+    "random": {
+     "lo": 0.0,
+     "hi": 0.0677
+    }
+   },
+   "controls": [
+    {
+     "layer": 6,
+     "fpr": {
+      "genre": 0.032,
+      "role": 0.063
+     },
+     "mean_power": {
+      "genre": 0.284,
+      "role": 0.484
+     },
+     "no_change": 0.049
+    },
+    {
+     "layer": 12,
+     "fpr": {
+      "genre": 0.038,
+      "role": 0.052
+     },
+     "mean_power": {
+      "genre": 0.244,
+      "role": 0.446
+     },
+     "no_change": 0.032
+    },
+    {
+     "layer": 18,
+     "fpr": {
+      "genre": 0.038,
+      "role": 0.04
+     },
+     "mean_power": {
+      "genre": 0.245,
+      "role": 0.444
+     },
+     "no_change": 0.048
+    }
+   ],
+   "power_corrected": {
+    "role": {
+     "observed_excess": 0.0458,
+     "corrected_excess": 0.1159,
+     "ci": [
+      0.0701,
+      0.1621
+     ],
+     "range_by_power": [
+      0.0914,
+      0.1673
+     ]
+    },
+    "genre": {
+     "observed_excess": 0.0174,
+     "corrected_excess": 0.0764,
+     "ci": [
+      0.0093,
+      0.1411
+     ],
+     "range_by_power": [
+      0.0666,
+      0.0929
+     ]
+    },
+    "role_minus_genre": {
+     "corrected": 0.0395,
+     "ci": [
+      -0.0358,
+      0.1143
+     ],
+     "share_boot_above_0": 0.842
+    }
+   }
+  },
+  "difference": {
+   "role_excess": 0.0078,
+   "ci": [
+    -0.0158,
+    0.0313
+   ],
+   "share_above_0": 0.747
+  }
+ }
+}

@@ -1,0 +1,11 @@
+__pycache__/
+.DS_Store
+*.log
+
+# large intermediates, rebuilt by the scripts
+*.npz
+*.pt
+lineage_out_pilot_v1/
+lineage_out_pilot_v2/
+blind_pilot/
+blind_pilot2/

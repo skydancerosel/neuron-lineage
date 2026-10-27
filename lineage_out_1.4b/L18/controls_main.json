@@ -1,0 +1,441 @@
+{
+ "model": "EleutherAI/pythia-1.4b-deduped",
+ "layer": 18,
+ "steps": [
+  128,
+  256,
+  512,
+  1000,
+  2000,
+  4000,
+  8000,
+  16000,
+  32000,
+  64000,
+  143000
+ ],
+ "args": {
+  "stage": "controls",
+  "model": "EleutherAI/pythia-1.4b-deduped",
+  "layers": [
+   18
+  ],
+  "bases": [
+   "neuron",
+   "random"
+  ],
+  "steps": [
+   1000,
+   2000,
+   4000,
+   8000,
+   16000,
+   32000,
+   64000,
+   143000
+  ],
+  "early_steps": [
+   128,
+   256,
+   512
+  ],
+  "device": null,
+  "dtype": null,
+  "dataset": "NeelNanda/pile-10k",
+  "split": "train",
+  "n_tokens": 2000000,
+  "ctx": 512,
+  "k": 200,
+  "per_chunk": 2,
+  "batch": 16,
+  "n_neurons": 512,
+  "neuron_seed": 2,
+  "window": 24,
+  "after": 4,
+  "lex_span": 3,
+  "sem_weight": 0.5,
+  "role_model": "gpt2-medium",
+  "role_layer": 12,
+  "next_weight": 0.25,
+  "role_dims": 256,
+  "role_weight": 0.5,
+  "min_cluster": 10,
+  "cluster_thresh": 0.55,
+  "stable_corr": 0.5,
+  "stable_jacc": 0.1,
+  "new_frac": 0.9,
+  "birth_share": 0.2,
+  "collapse_share": 0.25,
+  "controls_span": 3,
+  "min_new_dist": 0.0,
+  "min_null": 20,
+  "boot": 1000,
+  "n_random_ctx": 20000,
+  "plant_size": 50,
+  "plant_ranks": [
+   25,
+   100,
+   400,
+   1600
+  ],
+  "plant_reps": 2,
+  "grid_sem_weight": [
+   0.5
+  ],
+  "grid_cluster_thresh": [
+   0.65
+  ],
+  "grid_new_frac": [
+   0.75
+  ],
+  "max_fpr": 0.08,
+  "max_false_new": 0.05,
+  "tag": "main",
+  "out": "lineage_out_1.4b",
+  "seed": 0
+ },
+ "stability": {
+  "full_run": {
+   "corr": 26,
+   "jacc": 0,
+   "either": 27,
+   "of": 512
+  },
+  "links_broken": {
+   "256": {
+    "corr": 4,
+    "jacc": 452,
+    "both": 4
+   },
+   "512": {
+    "corr": 61,
+    "jacc": 506,
+    "both": 61
+   },
+   "1000": {
+    "corr": 428,
+    "jacc": 510,
+    "both": 427
+   },
+   "2000": {
+    "corr": 407,
+    "jacc": 509,
+    "both": 404
+   },
+   "4000": {
+    "corr": 152,
+    "jacc": 441,
+    "both": 143
+   },
+   "8000": {
+    "corr": 28,
+    "jacc": 206,
+    "both": 11
+   },
+   "16000": {
+    "corr": 2,
+    "jacc": 72,
+    "both": 0
+   },
+   "32000": {
+    "corr": 2,
+    "jacc": 26,
+    "both": 0
+   },
+   "64000": {
+    "corr": 1,
+    "jacc": 10,
+    "both": 1
+   },
+   "143000": {
+    "corr": 1,
+    "jacc": 2,
+    "both": 1
+   }
+  },
+  "median_corr": {
+   "256": 0.747,
+   "512": 0.597,
+   "1000": 0.439,
+   "2000": 0.447,
+   "4000": 0.537,
+   "8000": 0.621,
+   "16000": 0.661,
+   "32000": 0.7,
+   "64000": 0.741,
+   "143000": 0.829
+  },
+  "median_jacc": {
+   "256": 0.028,
+   "512": 0.013,
+   "1000": 0.008,
+   "2000": 0.026,
+   "4000": 0.064,
+   "8000": 0.11,
+   "16000": 0.14,
+   "32000": 0.166,
+   "64000": 0.19,
+   "143000": 0.266
+  },
+  "run_start_counts": {
+   "128": 27,
+   "256": 0,
+   "512": 2,
+   "1000": 67,
+   "2000": 271,
+   "4000": 133,
+   "8000": 11,
+   "16000": 0,
+   "32000": 0,
+   "64000": 0,
+   "143000": 1
+  }
+ },
+ "rule": "most mean lineage power (over both spaces) among settings with superposition fpr <= 0.08 in each space and no-change <= 0.05 new jobs per unit",
+ "chosen": {
+  "sem_weight": 0.5,
+  "cluster_thresh": 0.65,
+  "new_frac": 0.75,
+  "units_with_jobs": 0.758,
+  "real_new_per_transition": 0.13,
+  "no_change_new_per_unit": 0.048,
+  "genre": {
+   "superposition": {
+    "n": 1022,
+    "detected": 0.704,
+    "fpr": 0.038,
+    "p_hist_10bins": [
+     41,
+     40,
+     38,
+     42,
+     44,
+     40,
+     54,
+     67,
+     105,
+     248
+    ]
+   },
+   "lineage": {
+    "25": {
+     "n": 281,
+     "detected": 0.281,
+     "adjacent_if_detected": 0.734,
+     "power": 0.206
+    },
+    "100": {
+     "n": 281,
+     "detected": 0.352,
+     "adjacent_if_detected": 0.687,
+     "power": 0.242
+    },
+    "400": {
+     "n": 281,
+     "detected": 0.573,
+     "adjacent_if_detected": 0.478,
+     "power": 0.274
+    },
+    "1600": {
+     "n": 281,
+     "detected": 0.847,
+     "adjacent_if_detected": 0.307,
+     "power": 0.26
+    }
+   },
+   "mean_power": 0.245
+  },
+  "role": {
+   "superposition": {
+    "n": 1022,
+    "detected": 0.704,
+    "fpr": 0.04,
+    "p_hist_10bins": [
+     58,
+     66,
+     66,
+     66,
+     71,
+     64,
+     59,
+     68,
+     74,
+     127
+    ]
+   },
+   "lineage": {
+    "25": {
+     "n": 281,
+     "detected": 0.281,
+     "adjacent_if_detected": 0.937,
+     "power": 0.263
+    },
+    "100": {
+     "n": 281,
+     "detected": 0.352,
+     "adjacent_if_detected": 0.96,
+     "power": 0.338
+    },
+    "400": {
+     "n": 281,
+     "detected": 0.573,
+     "adjacent_if_detected": 0.894,
+     "power": 0.512
+    },
+    "1600": {
+     "n": 281,
+     "detected": 0.847,
+     "adjacent_if_detected": 0.782,
+     "power": 0.662
+    }
+   },
+   "mean_power": 0.444
+  },
+  "mean_power": 0.345
+ },
+ "pr_baselines": {
+  "0.5": {
+   "genre": {
+    "random_contexts": 124.31,
+    "single_token": {
+     " -": 53.77,
+     " there": 108.33,
+     " We": 107.74,
+     " If": 97.25
+    },
+    "units_median_by_step": {
+     "1000": 103.15,
+     "2000": 103.61,
+     "4000": 103.44,
+     "8000": 103.11,
+     "16000": 101.53,
+     "32000": 100.31,
+     "64000": 99.36,
+     "143000": 98.49
+    }
+   },
+   "role": {
+    "random_contexts": 75.53,
+    "single_token": {
+     " -": 15.94,
+     " there": 14.68,
+     " We": 9.15,
+     " If": 12.4
+    },
+    "units_median_by_step": {
+     "1000": 33.59,
+     "2000": 35.77,
+     "4000": 37.65,
+     "8000": 38.97,
+     "16000": 40.83,
+     "32000": 41.49,
+     "64000": 40.34,
+     "143000": 39.87
+    }
+   }
+  }
+ },
+ "grid": [
+  {
+   "sem_weight": 0.5,
+   "cluster_thresh": 0.65,
+   "new_frac": 0.75,
+   "units_with_jobs": 0.758,
+   "real_new_per_transition": 0.13,
+   "no_change_new_per_unit": 0.048,
+   "genre": {
+    "superposition": {
+     "n": 1022,
+     "detected": 0.704,
+     "fpr": 0.038,
+     "p_hist_10bins": [
+      41,
+      40,
+      38,
+      42,
+      44,
+      40,
+      54,
+      67,
+      105,
+      248
+     ]
+    },
+    "lineage": {
+     "25": {
+      "n": 281,
+      "detected": 0.281,
+      "adjacent_if_detected": 0.734,
+      "power": 0.206
+     },
+     "100": {
+      "n": 281,
+      "detected": 0.352,
+      "adjacent_if_detected": 0.687,
+      "power": 0.242
+     },
+     "400": {
+      "n": 281,
+      "detected": 0.573,
+      "adjacent_if_detected": 0.478,
+      "power": 0.274
+     },
+     "1600": {
+      "n": 281,
+      "detected": 0.847,
+      "adjacent_if_detected": 0.307,
+      "power": 0.26
+     }
+    },
+    "mean_power": 0.245
+   },
+   "role": {
+    "superposition": {
+     "n": 1022,
+     "detected": 0.704,
+     "fpr": 0.04,
+     "p_hist_10bins": [
+      58,
+      66,
+      66,
+      66,
+      71,
+      64,
+      59,
+      68,
+      74,
+      127
+     ]
+    },
+    "lineage": {
+     "25": {
+      "n": 281,
+      "detected": 0.281,
+      "adjacent_if_detected": 0.937,
+      "power": 0.263
+     },
+     "100": {
+      "n": 281,
+      "detected": 0.352,
+      "adjacent_if_detected": 0.96,
+      "power": 0.338
+     },
+     "400": {
+      "n": 281,
+      "detected": 0.573,
+      "adjacent_if_detected": 0.894,
+      "power": 0.512
+     },
+     "1600": {
+      "n": 281,
+      "detected": 0.847,
+      "adjacent_if_detected": 0.782,
+      "power": 0.662
+     }
+    },
+    "mean_power": 0.444
+   },
+   "mean_power": 0.345
+  }
+ ]
+}

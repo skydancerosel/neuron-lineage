@@ -1,0 +1,32 @@
+
+  <p>Most parent jobs fade: on 57–79% of them, depending on the layer, the unit's activation ends below a quarter of its top-200 cutoff. Does the model lose the job, hand it to another unit, or keep it spread across the layer? A first look said "spread across the layer". Three checks, asked for in review, say mostly not.</p>
+  <p>For each parent job, its contexts were compared with contexts that have the same token but come from elsewhere in the corpus. Three readers tried to tell them apart: a linear probe on all 4,096 MLP units of the layer, cross-validated; the best single unit, chosen on the training folds only; and the job's own unit. Scores are AUC, where 0.5 is chance. That came to 441 faded and 224 kept parents for each basis, over the three layers.</p>
+
+  <p hidden id="probe-title">A faded job leaves its neuron, and most of what the layer still reads was there before training</p>
+  <div class="chart" id="chart-probe"></div>
+  <p class="caption">Medians over jobs. Source: lineage_out/fade_probe.json, fade_step0.json and fade_control.json.</p>
+
+  <ul>
+    <li><strong>Fading is local.</strong> The neuron that held the job drops from 1.00 to 0.54, close to chance. Kept parents stay at 0.89.</li>
+    <li><strong>The layer still separates the contexts, but mostly from what the text looks like.</strong> The whole-layer probe reads faded jobs at 0.90 at the end, yet the untrained network already reads them at 0.76. Training adds 0.10 for faded jobs, 0.23 for kept ones, and 0.08 for coherent clusters of random contexts that are no unit's job. Compared at the same starting level, faded jobs gain about 0.13 more than non-job sets. Part of that may be regression to the mean, so the job-specific part is somewhere between about 0.02 and 0.13.</li>
+    <li><strong>No neuron takes the job over.</strong> The best single unit reaches 0.77, against 0.90 for kept parents, and the handoff test above found no taker.</li>
+  </ul>
+
+  <h3>Three checks</h3>
+  <div class="scroll"><table id="table-fade-tests"></table></div>
+  <p class="caption">Medians over jobs (neuron basis). Sources: lineage_out/fade_step0.json, fade_ablate.json, fade_ablate_all.json and fade_sae.json, summarized in followup_stats.json.</p>
+  <ul>
+    <li><strong>The untrained network.</strong> Most of what the trained layer reads about a faded job is already there at step 0, from the surrounding words alone.</li>
+    <li><strong>Removing the job's direction.</strong> The direction is the difference of means between job contexts and matched contexts, fitted on held-out halves. Removing it barely moves the model's prediction, no more than a random push of the same size. That holds at the job's position and at every position, for faded jobs, kept jobs and non-job sets alike. Even resetting a kept job's own neuron everywhere moves the prediction by only 0.0002 nats. So this model does not rely on any one direction, and the test cannot tell a used trace from an unused one, even for jobs that are clearly in use.</li>
+    <li><strong>Dictionary features.</strong> TopK sparse autoencoders were trained on each layer: 32,768 features, 12M tokens the corpus never uses. Their best feature for a faded job reads it no better than the best neuron (0.79 against 0.78, p = 0.28), or than the best of 32,768 random directions (0.77). It fires on 91% of the job's contexts but also on 24% of the matched ones. Kept jobs give the same picture: 0.885 for the best feature against 0.887 for the best neuron.</li>
+  </ul>
+
+  <p class="verdict">Faded jobs leave little behind beyond what the text itself reveals. Nothing here shows a hidden, distributed copy that a neuron-by-neuron reading would miss: the probe signal is mostly input statistics, and no dictionary feature picks the jobs out.</p>
+
+  <h3>Limits of these checks</h3>
+  <ul>
+    <li>The SAEs are small: they explain 63–75% of each layer's variance and recover 62–68% of its loss contribution. Larger dictionaries trained on more text might find features these miss.</li>
+    <li>The ablations lack power in this model: even removing a neuron that is doing its job hardly changes the prediction. Whether the small job-specific trace is used remains open.</li>
+    <li>The probe is linear and reads one layer. A job that moved to another layer, or into a nonlinear code, would look faded here.</li>
+    <li>Faded parents were measured from earlier checkpoints than kept ones (mostly steps 128–1,000, against 1,000–8,000).</li>
+  </ul>

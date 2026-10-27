@@ -1,0 +1,495 @@
+<title>Pythia Neuron Lineage</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=Public+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column (~44rem) with figures allowed a little wider; summary first, detail after. */
+:root {
+  --bg: #f4f6f9; --surface: #ffffff; --ink: #19212d; --muted: #5a6474; --line: #dbe0e7;
+  --neuron: #2353c4; --random: #8a92a2; --mark: #ffe28a; --mark-ink: #19212d;
+  --bad: #b8483e; --soft: #e8edf6;
+  --display: "Newsreader", "Iowan Old Style", Georgia, serif;
+  --body: "Public Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #10141b; --surface: #171d26; --ink: #e5e9f0; --muted: #9aa4b4; --line: #2a3340;
+  --neuron: #79a2ff; --random: #7b8395; --mark: #5b4a13; --mark-ink: #f3ead0; --bad: #e07a70; --soft: #1d2533; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #10141b; --surface: #171d26; --ink: #e5e9f0; --muted: #9aa4b4; --line: #2a3340;
+  --neuron: #79a2ff; --random: #7b8395; --mark: #5b4a13; --mark-ink: #f3ead0; --bad: #e07a70; --soft: #1d2533; color-scheme: dark }
+body { background: var(--bg); color: var(--ink); font: 16px/1.6 var(--body); }
+.wrap { max-width: 46rem; margin: 0 auto; padding-block: 2.5rem 4rem;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { font-family: var(--display); font-weight: 600; text-wrap: balance; line-height: 1.2; }
+h1 { font-size: clamp(2rem, 5vw, 2.8rem); margin: .3rem 0 1rem; }
+h2 { font-size: 1.6rem; margin: 3.2rem 0 .8rem; }
+h3 { font-size: 1.15rem; margin: 1.6rem 0 .4rem; }
+p { margin: 0 0 1rem; }
+.eyebrow { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.lede { font-size: 1.15rem; }
+.muted { color: var(--muted); }
+nav { display: flex; flex-wrap: wrap; gap: .4rem 1rem; font-size: .88rem; margin: 1.5rem 0 0; }
+nav a { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--line); }
+nav a:hover, nav a:focus-visible { color: var(--ink); border-color: var(--ink); }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--neuron); outline-offset: 2px; }
+.figures { display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: 1rem; margin: 2rem 0 0; }
+.fig { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 1rem; min-width: 0; }
+.fig b { display: block; font-family: var(--display); font-size: 1.9rem; font-weight: 600; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.fig span { font-size: .85rem; color: var(--muted); display: block; margin-top: .35rem; }
+.chart { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 1rem 1rem .6rem; margin: 1rem 0 .4rem; }
+.chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+.chart .title { font-weight: 600; margin: 0 0 .2rem; }
+.chart .sub { font-size: .85rem; color: var(--muted); margin: 0 0 .6rem; }
+.caption { font-size: .8rem; color: var(--muted); margin: .2rem 0 1.4rem; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; margin-bottom: .6rem; flex-wrap: wrap; }
+.seg button { font: inherit; font-size: .85rem; padding: .3rem .7rem; border: 0; background: transparent; color: var(--muted); cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--soft); color: var(--ink); font-weight: 600; }
+.legend { display: flex; flex-wrap: wrap; gap: .3rem 1.2rem; font-size: .85rem; color: var(--muted); margin: .2rem 0 .4rem; }
+.legend i { display: inline-block; width: .75rem; height: .75rem; border-radius: 50%; margin-right: .35rem; vertical-align: -1px; }
+.scroll { overflow-x: auto; margin: 1rem 0; }
+table { border-collapse: collapse; width: 100%; font-size: .9rem; font-variant-numeric: tabular-nums; }
+th, td { text-align: left; padding: .45rem .6rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-weight: 600; font-size: .8rem; color: var(--muted); }
+td.num, th.num { text-align: right; white-space: nowrap; }
+code, .ctx { font-family: var(--mono); font-size: .82rem; }
+.ctx mark { background: var(--mark); color: var(--mark-ink); padding: 0 .15em; border-radius: 3px; }
+ol.steps { padding-left: 1.3rem; }
+ol.steps li { margin-bottom: .55rem; }
+ul { padding-left: 1.2rem; }
+li { margin-bottom: .35rem; }
+.verdict { border-left: 3px solid var(--neuron); padding: .2rem 0 .2rem 1rem; margin: 1.2rem 0; }
+details { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: .8rem 1rem; margin: .8rem 0; }
+summary { cursor: pointer; font-weight: 600; }
+.pending { border: 1px dashed var(--line); border-radius: 8px; padding: 1rem; color: var(--muted); }
+svg text { fill: var(--muted); font: 12px var(--body); }
+svg .ink { fill: var(--ink); }
+svg .grid { stroke: var(--line); stroke-width: 1; }
+svg .ref { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 4 3; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+<header>
+  <div class="eyebrow">Pythia-410m and 1.4b · checkpoints 128 to 143,000 · MLP layers 6, 12, 18</div>
+  <h1>Do neurons grow new jobs from old ones?</h1>
+  <p class="lede">Sometimes, and more often than arbitrary directions do. In real neurons <span id="lede-n"></span> of new jobs sprout next to an earlier job, against <span id="lede-r"></span> in random directions, and the gap holds at Pythia-1.4b. The clearest links keep what a token is doing in its sentence while moving to a new kind of text, and most new jobs have no visible parent at all. Jobs a neuron drops leave little behind beyond what the text itself reveals.</p>
+  <div class="figures" id="figures"></div>
+  <nav aria-label="Sections">
+    <a href="#question">The question</a><a href="#method">How it was tested</a><a href="#result">Main result</a>
+    <a href="#links">What the links look like</a><a href="#readers">Blind readers</a><a href="#howmuch">How much sprouting</a><a href="#size">A larger model</a>
+    <a href="#neuron1038">One neuron</a><a href="#faded">Where faded jobs go</a><a href="#meaning">What it means</a><a href="#files">Methods and files</a>
+  </nav>
+</header>
+
+<section id="question">
+  <h2>The question</h2>
+  <p>A neuron that fires on several unrelated things is called polysemantic. Nick Cammarata's essay <a href="https://already-clean.goodfire.com">Neural Networks Are Already Clean</a> argues that most of what is left of this in modern networks is recursive generalization: a neuron's job sprouts a neighbouring job, which sprouts another, until the ends look unrelated. Its example is a neuron that goes from <code>iy</code> to <code>diy</code> to <code>do it yourself</code>.</p>
+  <p>The usual alternative is superposition: unrelated jobs packed into one neuron because there are more features than neurons. The two make different predictions about history. A sprout appears next to an older job of the same neuron. A packed-in job arrives with no relative. Pythia saved its weights all through training, so the history can be watched.</p>
+</section>
+
+<section id="method">
+  <h2>How it was tested</h2>
+  <ol class="steps">
+    <li><b>Top contexts.</b> For 512 sampled neurons per layer, and 512 random directions in the same layer as a control, the 200 places in a fixed 2M-token Pile sample where each fires most, at 11 checkpoints. At most 2 per document, with word-for-word repeats dropped.</li>
+    <li><b>Jobs.</b> Each context is placed in two frozen spaces: <em>genre</em> (what kind of text it is) and <em>role</em> (what the firing token is doing, read from a different model, GPT-2 medium). A job is a cluster of at least 10 contexts.</li>
+    <li><b>New jobs.</b> Clustering all of a unit's contexts so far, a cluster made mostly (75%) of contexts first seen at a checkpoint is a new job.</li>
+    <li><b>Birth and parent.</b> Rerunning those contexts through every checkpoint dates the job's birth: the first checkpoint from which they hold 20% of the unit's top-200 cutoff. Its parent is the unit's nearest job at the checkpoint just before. Jobs already active at step 128 are not tested.</li>
+    <li><b>Lineage test.</b> In each space separately: is the parent closer to the new job than other units' nearest jobs from the same kind of text? Closer than 95% of them counts as <em>adjacent</em>.</li>
+  </ol>
+  <p>All settings were fixed before the main run, from a pilot on a different neuron sample, and written into the study doc. Planted answers checked the test's false-positive rate and power on every layer, and blind readers checked whether its links are visible.</p>
+</section>
+
+<section id="result">
+  <h2>Main result</h2>
+  <p>The pre-registered test passed. In the role space, new jobs in neurons sprout beside an earlier job more often than in random directions, in every layer and most of all in layer 6.</p>
+  <div class="chart" id="chart-main"></div>
+  <p class="caption">Share of tested new jobs labelled adjacent, with 95% binomial intervals. Source: lineage_out/L{6,12,18}[_rand]/report_main.json.</p>
+  <div class="scroll"><table id="table-main"></table></div>
+  <p id="boot-text"></p>
+  <p id="unit-text"></p>
+  <p id="power-text"></p>
+</section>
+
+<section id="links">
+  <h2>What the links look like</h2>
+  <p>The clearest links keep a token's grammatical job and carry it into a new kind of text. These are the closest role-space parents among the new jobs that are adjacent in role but not in genre.</p>
+  <div class="scroll"><table>
+    <thead><tr><th>Layer</th><th>Parent job</th><th>New job</th><th>Shared role</th></tr></thead>
+    <tbody>
+      <tr><td>6</td><td><span class="ctx">prisoner<mark>'s</mark> petition</span><br><span class="muted">court rulings</span></td><td><span class="ctx">patients<mark>'</mark> quality of</span><br><span class="muted">medical abstracts</span></td><td>Possessive marker</td></tr>
+      <tr><td>6</td><td><span class="ctx"><mark>Category</mark>:Scottish</span><br><span class="muted">Wikipedia</span></td><td><span class="ctx"><mark>title</mark>: Experiment</span><br><span class="muted">arXiv metadata</span></td><td>Field label before a colon</td></tr>
+      <tr><td>6</td><td><span class="ctx">"<mark>What</mark> if our kids</span><br><span class="muted">subtitles</span></td><td><span class="ctx">?<mark> How</mark> much is</span><br><span class="muted">web questions</span></td><td>Question-opening word</td></tr>
+      <tr><td>12</td><td><span class="ctx"><mark> Moreover</mark>, the</span></td><td><span class="ctx">For<mark> instance</mark>, · For<mark> example</mark>,</span><br><span class="muted">patents</span></td><td>Discourse connective</td></tr>
+      <tr><td>18</td><td><span class="ctx">was<mark> likely</mark> to be</span><br><span class="muted">news</span></td><td><span class="ctx">has been<mark> shown</mark> to · seems to</span><br><span class="muted">abstracts</span></td><td>Predicate before "to"</td></tr>
+      <tr><td>18</td><td><span class="ctx">I<mark> am</mark> studying</span><br><span class="muted">forum posts</span></td><td><span class="ctx">Alex<mark> is</mark> joined</span><br><span class="muted">news</span></td><td>Verb right after the subject</td></tr>
+    </tbody>
+  </table></div>
+  <p id="window-text"></p>
+</section>
+
+<section id="readers">
+  <h2>Can blind readers see the links?</h2>
+  <p>Six fresh Claude sub-agents, told nothing about labels or basis, judged 150 items. Each showed a new job's contexts beside two candidates: its real parent, and a decoy picked the same way from another unit. They had to say which one came from the same unit.</p>
+  <div class="chart" id="chart-blind"></div>
+  <p class="caption">Share of items where the reader picked the real parent, with 95% intervals; 50% is chance. Source: blind_main/.</p>
+  <p id="blind-text"></p>
+</section>
+
+<section id="howmuch">
+  <h2>How much sprouting is there really?</h2>
+  <p>The test misses many real sprouts and labels a few unrelated jobs adjacent by chance, so the observed shares need correcting. Planted answers measured both on every layer.</p>
+  <div class="scroll"><table id="table-ctrl"></table></div>
+  <p>If a share f of new jobs truly sprout, the test reports about f × power + (1 − f) × false-positive rate. Solving for f with the best and worst controls gives a range.</p>
+  <div class="chart" id="chart-range"></div>
+  <p class="caption">Range of the true sprouting share consistent with the controls; the dot is the observed adjacent share. Assumes real sprouts sit no farther from their parents than the farthest planted ones.</p>
+  <p class="verdict">Even at the test's weakest power, fewer than a third of new jobs in neurons sprout from an earlier one.</p>
+</section>
+
+<section id="size">
+  <h2>A larger model</h2>
+  <p>The same rules, unchanged, on Pythia-1.4b: the same data in the same order, layers 6, 12 and 18 of 24, 512 neurons and 512 random directions per layer. Its planted-answer controls passed in every layer, with power about the same as 410m.</p>
+  <div class="scroll"><table id="table-size"></table></div>
+  <p class="caption">Share of tested new jobs adjacent in the role space, neurons against random directions, with one-sided Fisher p. Sources: lineage_out/ and lineage_out_1.4b/, summarized in followup_stats.json.</p>
+  <p id="size-text"></p>
+  <p class="verdict">The neuron advantage holds at 1.4b, in every layer, and is about as large. Two sizes cannot tell whether it grows.</p>
+</section>
+
+<section id="neuron1038">
+  <h2>One neuron, step by step</h2>
+  <p>Neuron 1038 in layer 12, from the second pilot, traced at every 1,000 steps. Jobs change over thousands of steps, not in one jump, and no other neuron takes over the job that collapses.</p>
+  <div class="chart" id="chart-1038"></div>
+  <p class="caption">Activation on each job's contexts as a share of the neuron's top-200 cutoff (1.0 = the cutoff). No checkpoint between 4,000 and 8,000. Source: case_study/neuron1038.json.</p>
+</section>
+
+<section id="faded">
+  <h2>Where faded jobs go</h2>
+  <div id="faded-body"><p class="pending">This section fills in when the faded-job probe finishes.</p></div>
+</section>
+
+<section id="meaning">
+  <h2>What it means for the essay</h2>
+  <p>Neurons do grow partly by recursive generalization: a new job sits next to an earlier one about 4 points more often in neurons than in random directions, and twice as often per unit. The clearest cases keep a token's grammatical role and carry it into a new kind of text, a link a topic-only audit misses, though corrected for power the genre space shows lineage about as often. That fits the essay's claim that the neuron basis is special, with a different kind of evidence than its rotation search: the effect shows in how training adds jobs, not only in the finished model. Both may come from the same cause, GELU acting on each neuron separately. The same holds at Pythia-1.4b, with an advantage of about the same size.</p>
+  <p>The stronger claim, that recursive generalization explains most leftover polysemanticity, does not hold here. Even correcting for the test's misses, fewer than a third of new jobs sprout from an earlier one, and blind readers find no hidden parent for the rest.</p>
+  <p>Jobs a neuron drops do not visibly survive elsewhere. An untrained network already reads most of what the trained layer reads about them, and no SAE feature picks them out better than a neuron does. So this study finds no sign of distributed leftovers that a neuron-level audit would miss, though its SAEs are small and its ablations too blunt to settle whether the small remaining trace is used. For jobs that are still active, the best SAE feature also does no better than the best neuron, which fits the essay's own SAE comparison.</p>
+  <h3>Caveats</h3>
+  <ul>
+    <li>Two sizes of one model family, Pythia-410m and 1.4b with plain GELU MLPs, on one corpus. The essay's strongest claims are about SwiGLU models such as Qwen3.</li>
+    <li>Random directions are not a pure null. They mix many neurons and inherit some of their continuity, so the gap measures what is specific to the neuron basis.</li>
+    <li>The same-source null runs slightly liberal (role false positives up to 7.1%); it affects both bases alike.</li>
+    <li>In 410m the no-change control found 0.06–0.09 spurious new jobs per unit, a little above the 0.05 the pilot used when choosing settings (1.4b: at most 0.049). Spurious jobs arise in both bases alike; the main-run rule checked only false positives.</li>
+    <li>Only each unit's top 200 contexts are seen, so weak or slow sprouts go undetected.</li>
+    <li>The blind readers were Claude sub-agents and saw only contexts: a link the model makes through circuits would not show.</li>
+    <li>The SAEs used for the faded-job check are small (12M training tokens, 62–68% of loss recovered), and the ablations cannot tell used from unused directions even for active jobs.</li>
+  </ul>
+  <h3>Next</h3>
+  <p>Pythia-6.9b or 12b, under the same rules, would show whether the neuron advantage grows with scale; two sizes cannot. OLMo checkpoints would test SwiGLU.</p>
+</section>
+
+<section id="files">
+  <h2>Methods and files</h2>
+  <details><summary>Fixed rules</summary>
+    <p>Clustering: genre semantic weight 0.5, joined-space cosine cut 0.65, new-job share 0.75, chosen by the pilot's blind planted-answer controls. Birth share 0.2, collapse share 0.25, at least 20 null units, one-sided Fisher p &lt; 0.05 on role-space adjacency pooled over layers as the primary test.</p>
+  </details>
+  <details><summary>Files</summary>
+    <ul>
+      <li><code>neuron_lineage.py</code>: collect, controls, analyze, redecoy</li>
+      <li><code>run_main.py</code>: the main run, any Pythia size · <code>fade_probe.py</code> and <code>fade_control.py</code>: where faded jobs go</li>
+      <li><code>fade_followup.py</code>: the untrained-network probe, the ablations and the SAE match · <code>train_sae.py</code>: the SAEs · <code>followup_stats.py</code>: power-corrected comparison, birth windows and the follow-up summaries</li>
+      <li><code>blind_test.py</code> and <code>blind_main/</code>: the blind test and its decoy distances</li>
+      <li><code>case_study.py</code> and <code>case_study/</code>: neuron 1038</li>
+      <li><code>lineage_out/</code>: all collected activations, reports and controls</li>
+      <li><code>make_report.py</code>: builds this page from those files</li>
+    </ul>
+  </details>
+</section>
+</div>
+
+<template id="faded-template">
+  <p>Most parent jobs fade: on 57–79% of them, depending on the layer, the unit's activation ends below a quarter of its top-200 cutoff. Does the model lose the job, hand it to another unit, or keep it spread across the layer? A first look said "spread across the layer". Three checks, asked for in review, say mostly not.</p>
+  <p>For each parent job, its contexts were compared with contexts that have the same token but come from elsewhere in the corpus. Three readers tried to tell them apart: a linear probe on all 4,096 MLP units of the layer, cross-validated; the best single unit, chosen on the training folds only; and the job's own unit. Scores are AUC, where 0.5 is chance. That came to 441 faded and 224 kept parents for each basis, over the three layers.</p>
+
+  <p hidden id="probe-title">A faded job leaves its neuron, and most of what the layer still reads was there before training</p>
+  <div class="chart" id="chart-probe"></div>
+  <p class="caption">Medians over jobs. Source: lineage_out/fade_probe.json, fade_step0.json and fade_control.json.</p>
+
+  <ul>
+    <li><strong>Fading is local.</strong> The neuron that held the job drops from 1.00 to 0.54, close to chance. Kept parents stay at 0.89.</li>
+    <li><strong>The layer still separates the contexts, but mostly from what the text looks like.</strong> The whole-layer probe reads faded jobs at 0.90 at the end, yet the untrained network already reads them at 0.76. Training adds 0.10 for faded jobs, 0.23 for kept ones, and 0.08 for coherent clusters of random contexts that are no unit's job. Compared at the same starting level, faded jobs gain about 0.13 more than non-job sets. Part of that may be regression to the mean, so the job-specific part is somewhere between about 0.02 and 0.13.</li>
+    <li><strong>No neuron takes the job over.</strong> The best single unit reaches 0.77, against 0.90 for kept parents, and the handoff test above found no taker.</li>
+  </ul>
+
+  <h3>Three checks</h3>
+  <div class="scroll"><table id="table-fade-tests"></table></div>
+  <p class="caption">Medians over jobs (neuron basis). Sources: lineage_out/fade_step0.json, fade_ablate.json, fade_ablate_all.json and fade_sae.json, summarized in followup_stats.json.</p>
+  <ul>
+    <li><strong>The untrained network.</strong> Most of what the trained layer reads about a faded job is already there at step 0, from the surrounding words alone.</li>
+    <li><strong>Removing the job's direction.</strong> The direction is the difference of means between job contexts and matched contexts, fitted on held-out halves. Removing it barely moves the model's prediction, no more than a random push of the same size. That holds at the job's position and at every position, for faded jobs, kept jobs and non-job sets alike. Even resetting a kept job's own neuron everywhere moves the prediction by only 0.0002 nats. So this model does not rely on any one direction, and the test cannot tell a used trace from an unused one, even for jobs that are clearly in use.</li>
+    <li><strong>Dictionary features.</strong> TopK sparse autoencoders were trained on each layer: 32,768 features, 12M tokens the corpus never uses. Their best feature for a faded job reads it no better than the best neuron (0.79 against 0.78, p = 0.28), or than the best of 32,768 random directions (0.77). It fires on 91% of the job's contexts but also on 24% of the matched ones. Kept jobs give the same picture: 0.885 for the best feature against 0.887 for the best neuron.</li>
+  </ul>
+
+  <p class="verdict">Faded jobs leave little behind beyond what the text itself reveals. Nothing here shows a hidden, distributed copy that a neuron-by-neuron reading would miss: the probe signal is mostly input statistics, and no dictionary feature picks the jobs out.</p>
+
+  <h3>Limits of these checks</h3>
+  <ul>
+    <li>The SAEs are small: they explain 63–75% of each layer's variance and recover 62–68% of its loss contribution. Larger dictionaries trained on more text might find features these miss.</li>
+    <li>The ablations lack power in this model: even removing a neuron that is doing its job hardly changes the prediction. Whether the small job-specific trace is used remains open.</li>
+    <li>The probe is linear and reads one layer. A job that moved to another layer, or into a nonlinear code, would look faded here.</li>
+    <li>Faded parents were measured from earlier checkpoints than kept ones (mostly steps 128–1,000, against 1,000–8,000).</li>
+  </ul>
+</template>
+<script>
+const DATA = {"layers": [{"layer": 6, "neuron": {"n": 1762, "kinds": {"dated": 1814, "old": 393, "no_parent": 72, "too_close": 0}, "role": [213, 0.1209, [0.1065, 0.1369]], "genre": [140, 0.0795, [0.0677, 0.093]], "role_only": [170, 0.0965, [0.0836, 0.1112]]}, "random": {"n": 1652, "kinds": {"dated": 1688, "old": 363, "no_parent": 81, "too_close": 0}, "role": [112, 0.0678, [0.0566, 0.0809]], "genre": [84, 0.0508, [0.0413, 0.0625]], "role_only": [95, 0.0575, [0.0473, 0.0698]]}, "p": {"role": 6.922833029132116e-08, "genre": 0.0004469468328968209, "role_only": 1.231122363972341e-05}}, {"layer": 12, "neuron": {"n": 1441, "kinds": {"dated": 1517, "old": 303, "no_parent": 128, "too_close": 0}, "role": [136, 0.0944, [0.0803, 0.1106]], "genre": [75, 0.052, [0.0417, 0.0648]], "role_only": [114, 0.0791, [0.0663, 0.0942]]}, "random": {"n": 773, "kinds": {"dated": 844, "old": 199, "no_parent": 251, "too_close": 0}, "role": [57, 0.0737, [0.0573, 0.0943]], "genre": [50, 0.0647, [0.0494, 0.0843]], "role_only": [40, 0.0517, [0.0382, 0.0697]]}, "p": {"role": 0.05787127163680139, "genre": 0.9064064138343759, "role_only": 0.00898879472129598}}, {"layer": 18, "neuron": {"n": 822, "kinds": {"dated": 855, "old": 306, "no_parent": 91, "too_close": 0}, "role": [68, 0.0827, [0.0658, 0.1036]], "genre": [46, 0.056, [0.0422, 0.0738]], "role_only": [55, 0.0669, [0.0518, 0.0861]]}, "random": {"n": 727, "kinds": {"dated": 841, "old": 219, "no_parent": 174, "too_close": 0}, "role": [37, 0.0509, [0.0371, 0.0694]], "genre": [18, 0.0248, [0.0157, 0.0388]], "role_only": [33, 0.0454, [0.0325, 0.0631]]}, "p": {"role": 0.00814199163867069, "genre": 0.001348251293768605, "role_only": 0.04247268543724569}}, {"layer": "Pooled", "neuron": {"n": 4025, "role": [417, 0.1036, [0.0946, 0.1134]], "genre": [261, 0.0648, [0.0576, 0.0729]], "role_only": [339, 0.0842, [0.076, 0.0932]]}, "random": {"n": 3152, "role": [206, 0.0654, [0.0572, 0.0745]], "genre": [152, 0.0482, [0.0413, 0.0563]], "role_only": [168, 0.0533, [0.046, 0.0617]]}, "p": {"role": 4.85704634834399e-09, "genre": 0.00149709344239098, "role_only": 1.8211025206252447e-07}}], "boot": {"role": [0.0381, 0.0243, 0.051], "genre": [0.0165, 0.0064, 0.0281], "role_only": [0.0307, 0.018, 0.0434]}, "controls": [{"layer": 6, "genre": {"fpr": 0.048, "power": [0.274, 0.276, 0.351, 0.268]}, "role": {"fpr": 0.071, "power": [0.329, 0.462, 0.596, 0.584]}, "with_jobs": 0.879}, {"layer": 12, "genre": {"fpr": 0.03, "power": [0.268, 0.261, 0.294, 0.263]}, "role": {"fpr": 0.039, "power": [0.335, 0.406, 0.555, 0.597]}, "with_jobs": 0.893}, {"layer": 18, "genre": {"fpr": 0.036, "power": [0.236, 0.259, 0.291, 0.305]}, "role": {"fpr": 0.047, "power": [0.266, 0.363, 0.508, 0.702]}, "with_jobs": 0.908}], "corrected": {"neuron": {"obs": 0.1036, "lo": 0.0517, "hi": 0.2846}, "random": {"obs": 0.0654, "lo": 0, "hi": 0.1163}}, "blind": {"neuron_adjacent": [41, 45, [0.7927, 0.9649]], "neuron_no_lineage": [15, 30, [0.3315, 0.6685]], "random_adjacent": [41, 45, [0.7927, 0.9649]], "random_no_lineage": [12, 30, [0.2459, 0.5768]], "decoy": {"n": 55, "decoy_closer": 30, "right_when_parent_closer": [17, 25], "right_when_decoy_closer": [7, 30]}}, "n1038": {"neuron": 1038, "steps": [4000, 8000, 9000, 10000, 11000, 12000, 13000, 14000, 15000, 16000], "jobs": ["new at 8000: <?xml version=\"1[[.]]0\" encoding=\"", "parent from 4000: ense\"); \u23ce // you may not[[ use]] this file except in", "new at 16000: /x**(-1)*x**(-7)/(x*x/x**(2/[[9]]))) assuming x is", "parent from 4000:  having to owner draw the whole form? \u23ce  \u23ce [[A]]: \u23ce  \u23ce You"], "share": [[0.617, 1.128, 1.271, 1.171, 1.066, 1.092, 1.246, 1.141, 1.033, 1.128], [1.188, 1.07, 0.981, 1.057, 0.8, 0.669, 0.637, 0.717, 0.466, 0.639], [0.259, 0.562, 0.678, 0.657, 0.813, 0.832, 1.002, 1.056, 0.923, 1.101], [1.032, 0.304, 0.279, 0.452, 0.166, 0.209, 0.226, 0.384, 0.215, 0.352]], "taker": [[[1565, 0.766], [2287, 0.695], [991, 0.912], [2437, 1.242], [2437, 0.921], [991, 0.983], [991, 1.216], [991, 1.052], [991, 1.088], [991, 1.163]], [[1834, 0.927], [166, 1.056], [1364, 0.964], [3985, 0.952], [3697, 1.054], [166, 0.937], [3697, 1.041], [1890, 0.975], [2370, 0.833], [3697, 0.892]], [[1223, 0.774], [1018, 0.726], [1202, 0.657], [2753, 0.585], [2753, 0.79], [2753, 0.709], [3036, 0.863], [2389, 0.707], [3036, 0.743], [2389, 0.788]], [[3616, 0.873], [2814, 0.745], [3616, 0.832], [3708, 0.8], [3708, 0.901], [3708, 0.721], [3708, 0.802], [2814, 0.717], [2814, 0.761], [2814, 0.764]]]}, "probe": {"chance": 0.627, "groups": {"neuron_faded": {"before": {"probe": [0.895, 0.952, 0.988], "best": [0.971, 0.995, 1.0], "own": [0.983, 0.997, 1.0], "rel_loss": [-1.094, -0.149, 0.82]}, "fade": {"probe": [0.81, 0.913, 0.972], "best": [0.661, 0.797, 0.89], "own": [0.557, 0.668, 0.76], "rel_loss": [-1.024, -0.083, 0.719]}, "end": {"probe": [0.79, 0.897, 0.967], "best": [0.662, 0.767, 0.883], "own": [0.444, 0.542, 0.688], "rel_loss": [-0.923, -0.133, 0.518]}}, "neuron_stayed": {"before": {"probe": [0.946, 0.98, 0.995], "best": [0.989, 1.0, 1.0], "own": [0.995, 1.0, 1.0], "rel_loss": [-1.018, -0.098, 0.718]}, "end": {"probe": [0.907, 0.967, 0.994], "best": [0.791, 0.897, 0.961], "own": [0.778, 0.891, 0.956], "rel_loss": [-0.77, -0.076, 0.708]}}, "neuron_random": {"before": {"probe": [0.445, 0.501, 0.536], "best": [0.454, 0.494, 0.54], "rel_loss": [-0.526, -0.043, 0.426]}, "end": {"probe": [0.441, 0.504, 0.559], "best": [0.442, 0.5, 0.556], "rel_loss": [-0.357, 0.013, 0.649]}}, "random_faded": {"before": {"probe": [0.888, 0.946, 0.979], "best": [0.973, 0.994, 1.0], "own": [0.983, 0.998, 1.0], "rel_loss": [-1.186, -0.265, 0.639]}, "fade": {"probe": [0.785, 0.893, 0.96], "best": [0.637, 0.756, 0.856], "own": [0.493, 0.572, 0.656], "rel_loss": [-0.832, -0.156, 0.57]}, "end": {"probe": [0.77, 0.884, 0.96], "best": [0.626, 0.74, 0.86], "own": [0.445, 0.529, 0.622], "rel_loss": [-0.622, -0.09, 0.515]}}, "random_stayed": {"before": {"probe": [0.925, 0.967, 0.993], "best": [0.99, 1.0, 1.0], "own": [0.997, 1.0, 1.0], "rel_loss": [-1.071, -0.112, 0.742]}, "end": {"probe": [0.868, 0.94, 0.989], "best": [0.709, 0.834, 0.936], "own": [0.637, 0.769, 0.87], "rel_loss": [-0.794, -0.084, 0.567]}}, "random_random": {"before": {"probe": [0.463, 0.506, 0.551], "best": [0.468, 0.499, 0.55], "rel_loss": [-0.405, 0.121, 0.526]}, "end": {"probe": [0.441, 0.499, 0.545], "best": [0.432, 0.487, 0.545], "rel_loss": [-0.487, -0.089, 0.405]}}}, "loss": {"neuron": {"faded": [-0.52, 0.104, 0.698], "stayed": [-0.17, 0.073, 0.369], "n": [441, 223], "p": 0.559}, "random": {"faded": [-0.261, 0.255, 0.81], "stayed": [-0.187, 0.132, 0.49], "n": [441, 223], "p": 0.019}}, "carried": {"neuron": {"bar": 0.891, "loss_bar": 0.802}, "random": {"bar": 0.769, "loss_bar": 1.119}}, "outcomes": {"neuron_faded": {"carried": 100, "spread": 86, "worse": 64, "same": 191}, "neuron_stayed": {"carried": 116, "spread": 45, "worse": 10, "same": 53}, "random_faded": {"carried": 189, "spread": 27, "worse": 37, "same": 188}, "random_stayed": {"carried": 135, "spread": 12, "worse": 12, "same": 64}}, "by_layer": {"neuron_faded": {"6": {"probe": 0.89, "best": 0.77, "own": 0.5}, "12": {"probe": 0.89, "best": 0.75, "own": 0.57}, "18": {"probe": 0.9, "best": 0.79, "own": 0.56}}, "neuron_stayed": {"6": {"probe": 0.98, "best": 0.94, "own": 0.91}, "12": {"probe": 0.97, "best": 0.88, "own": 0.88}, "18": {"probe": 0.95, "best": 0.88, "own": 0.89}}, "random_faded": {"6": {"probe": 0.86, "best": 0.71, "own": 0.53}, "12": {"probe": 0.9, "best": 0.74, "own": 0.54}, "18": {"probe": 0.9, "best": 0.76, "own": 0.53}}, "random_stayed": {"6": {"probe": 0.96, "best": 0.86, "own": 0.75}, "12": {"probe": 0.91, "best": 0.8, "own": 0.73}, "18": {"probe": 0.95, "best": 0.84, "own": 0.84}}}, "n": {"neuron_faded": 441, "neuron_stayed": 224, "neuron_random": 120, "random_faded": 441, "random_stayed": 223, "random_random": 120}, "control": {"probe": [0.61, 0.689, 0.841], "best": [0.504, 0.619, 0.718], "n": 61, "probe95": 0.935}}, "followup": {"power": {"layers": {"6": {"role": {"fpr": 0.071, "mean_power": 0.493, "observed_excess": 0.0531}, "genre": {"fpr": 0.048, "mean_power": 0.292, "observed_excess": 0.0286}}, "12": {"role": {"fpr": 0.039, "mean_power": 0.473, "observed_excess": 0.0206}, "genre": {"fpr": 0.03, "mean_power": 0.271, "observed_excess": -0.0126}}, "18": {"role": {"fpr": 0.047, "mean_power": 0.46, "observed_excess": 0.0318}, "genre": {"fpr": 0.036, "mean_power": 0.273, "observed_excess": 0.0312}}}, "role": {"observed_excess": 0.0382, "corrected_excess": 0.0973, "ci": [0.0678, 0.1269], "range_by_power": [0.0748, 0.1586]}, "genre": {"observed_excess": 0.0166, "corrected_excess": 0.0759, "ci": [0.0312, 0.1226], "range_by_power": [0.063, 0.0865]}, "role_minus_genre": {"corrected": 0.0214, "ci": [-0.0317, 0.0727], "share_boot_above_0": 0.799}}, "windows": {"neuron": {"rows": [{"window": "256\u2013512", "n": 999, "role": 112, "cross": 90, "role_share": 0.1121}, {"window": "1,000\u20132,000", "n": 1883, "role": 175, "cross": 138, "role_share": 0.0929}, {"window": "4,000\u20138,000", "n": 837, "role": 101, "cross": 87, "role_share": 0.1207}, {"window": "16,000+", "n": 306, "role": 29, "cross": 24, "role_share": 0.0948}], "early_share": {"all_new": 0.716, "role_adjacent": 0.688, "cross_genre": 0.673}, "early_vs_late_role_rate": {"early": 0.0996, "late": 0.1137, "p_two_sided": 0.1874}}, "random": {"rows": [{"window": "256\u2013512", "n": 784, "role": 60, "cross": 52, "role_share": 0.0765}, {"window": "1,000\u20132,000", "n": 1757, "role": 106, "cross": 88, "role_share": 0.0603}, {"window": "4,000\u20138,000", "n": 472, "role": 30, "cross": 19, "role_share": 0.0636}, {"window": "16,000+", "n": 139, "role": 10, "cross": 9, "role_share": 0.0719}], "early_share": {"all_new": 0.806, "role_adjacent": 0.806, "cross_genre": 0.833}, "early_vs_late_role_rate": {"early": 0.0653, "late": 0.0655, "p_two_sided": 1.0}}, "excess_by_window": [{"window": "256\u2013512", "neuron": 0.1121, "random": 0.0765, "p": 0.0069}, {"window": "1,000\u20132,000", "neuron": 0.0929, "random": 0.0603, "p": 0.0001}, {"window": "4,000\u20138,000", "neuron": 0.1207, "random": 0.0636, "p": 0.0005}, {"window": "16,000+", "neuron": 0.0948, "random": 0.0719, "p": 0.2757}]}, "fade": {"step0": {"neuron_faded": {"n": 441, "probe_step0": [0.645, 0.76, 0.86], "best_step0": [0.541, 0.617, 0.722], "own_step0": [0.47, 0.537, 0.629], "probe_end": [0.79, 0.897, 0.967], "best_end": [0.662, 0.767, 0.883], "own_end": [0.444, 0.542, 0.688], "probe_gain": [0.014, 0.097, 0.226], "share_gain_above_0": 0.8}, "neuron_stayed": {"n": 224, "probe_step0": [0.581, 0.708, 0.8335], "best_step0": [0.5108, 0.595, 0.7032], "own_step0": [0.4557, 0.511, 0.593], "probe_end": [0.9065, 0.967, 0.994], "best_end": [0.791, 0.8975, 0.961], "own_end": [0.7785, 0.8915, 0.956], "probe_gain": [0.1058, 0.227, 0.347], "share_gain_above_0": 0.955}, "neuron_random": {"n": 120, "probe_step0": [0.463, 0.5035, 0.5463], "best_step0": [0.4657, 0.503, 0.5403], "own_step0": null, "probe_end": [0.441, 0.504, 0.5593], "best_end": [0.4415, 0.5005, 0.5555], "own_end": null, "probe_gain": [-0.0705, -0.0155, 0.0742], "share_gain_above_0": 0.433}, "random_faded": {"n": 440, "probe_step0": [0.618, 0.7225, 0.85], "best_step0": [0.529, 0.6025, 0.7302], "own_step0": [0.47, 0.539, 0.619], "probe_end": [0.77, 0.884, 0.96], "best_end": [0.626, 0.74, 0.86], "own_end": [0.445, 0.529, 0.622], "probe_gain": [0.018, 0.1115, 0.26], "share_gain_above_0": 0.786}, "random_stayed": {"n": 223, "probe_step0": [0.64, 0.742, 0.8415], "best_step0": [0.5225, 0.616, 0.716], "own_step0": [0.4625, 0.519, 0.587], "probe_end": [0.868, 0.94, 0.989], "best_end": [0.709, 0.834, 0.936], "own_end": [0.6375, 0.769, 0.87], "probe_gain": [0.0645, 0.164, 0.2725], "share_gain_above_0": 0.888}, "random_random": {"n": 120, "probe_step0": [0.455, 0.497, 0.5378], "best_step0": [0.465, 0.491, 0.529], "own_step0": null, "probe_end": [0.4407, 0.4995, 0.545], "best_end": [0.432, 0.4875, 0.545], "own_end": null, "probe_gain": [-0.0698, -0.001, 0.0627], "share_gain_above_0": 0.492}, "coherent": {"n": 61, "probe_step0": [0.527, 0.59, 0.683], "probe_end": [0.61, 0.689, 0.841], "probe_gain": [0.016, 0.078, 0.175]}, "no_valid_fold": 1, "faded_vs_coherent_adjusted": {"excess_gain": 0.128, "t": 7.01, "raw_excess": 0.019}, "faded_vs_coherent_gain_p": 0.1874}, "ablate": {"faded": {"n": 441, "kl_real": [0.0019, 0.0044, 0.0103], "kl_kick": [0.0017, 0.0039, 0.0092], "ratio": [0.8386, 1.064, 1.5165], "share_real_above_kick": 0.56, "p_real_vs_kick": 8.5e-05, "p_dloss_real_vs_kick": 0.003863, "kl_real_neg": [0.0004, 0.0011, 0.0024], "dloss_real": [-0.0059, 0.0063, 0.0241], "dloss_kick": [-0.0079, 0.0027, 0.0174], "shift": [2.706, 3.881, 5.825], "kl_own": [0.0, 0.0, 0.0], "dloss_own": [-0.0004, 0.0, 0.0004]}, "stayed": {"n": 224, "kl_real": [0.0042, 0.0101, 0.0191], "kl_kick": [0.0036, 0.0093, 0.019], "ratio": [0.8463, 1.0816, 1.4434], "share_real_above_kick": 0.594, "p_real_vs_kick": 0.000546, "p_dloss_real_vs_kick": 0.043574, "kl_real_neg": [0.0003, 0.0011, 0.0027], "dloss_real": [-0.0075, 0.0076, 0.0392], "dloss_kick": [-0.0183, 0.0037, 0.0303], "shift": [3.9352, 5.584, 7.6963], "kl_own": [0.0001, 0.0001, 0.0003], "dloss_own": [-0.0023, 0.0, 0.0026]}, "coherent": {"n": 61, "kl_real": [0.0004, 0.0011, 0.0028], "kl_kick": [0.0003, 0.0009, 0.0021], "ratio": [0.9054, 1.2917, 1.7506], "share_real_above_kick": 0.656, "p_real_vs_kick": 0.00585, "p_dloss_real_vs_kick": 0.475658, "kl_real_neg": [0.0002, 0.0005, 0.0019], "dloss_real": [-0.0076, -0.0004, 0.0066], "dloss_kick": [-0.0072, 0.0014, 0.0085], "shift": [1.52, 2.106, 2.769]}, "p_faded_vs_coherent_ratio": 0.9478, "p_faded_vs_stayed_ratio": 0.7516}, "ablate_all": {"faded": {"n": 441, "kl_real": [0.0023, 0.0059, 0.0124], "kl_kick": [0.0022, 0.005, 0.0114], "ratio": [0.8023, 1.0506, 1.4552], "share_real_above_kick": 0.535, "p_real_vs_kick": 0.002271, "p_dloss_real_vs_kick": 0.028639, "kl_real_neg": [0.0007, 0.0018, 0.0035], "dloss_real": [-0.0072, 0.0069, 0.0303], "dloss_kick": [-0.0084, 0.0039, 0.0234], "shift": [2.706, 3.881, 5.825], "kl_own": [0.0, 0.0, 0.0], "dloss_own": [-0.0009, 0.0, 0.0007], "dspan_real": [-0.0008, 0.0022, 0.0068], "dspan_kick": [-0.0011, 0.0018, 0.006], "p_dspan_real_vs_kick": 0.2034, "dspan_own": [-0.0003, 0.0, 0.0003]}, "stayed": {"n": 224, "kl_real": [0.0048, 0.0107, 0.0216], "kl_kick": [0.0044, 0.0114, 0.0217], "ratio": [0.8332, 1.0517, 1.4014], "share_real_above_kick": 0.567, "p_real_vs_kick": 0.005494, "p_dloss_real_vs_kick": 0.045622, "kl_real_neg": [0.0006, 0.0017, 0.0034], "dloss_real": [-0.0083, 0.0082, 0.0433], "dloss_kick": [-0.0144, 0.0057, 0.0322], "shift": [3.9352, 5.584, 7.6963], "kl_own": [0.0001, 0.0002, 0.0003], "dloss_own": [-0.003, 0.0001, 0.0031], "dspan_real": [-0.0008, 0.0029, 0.0086], "dspan_kick": [-0.0012, 0.0023, 0.007], "p_dspan_real_vs_kick": 0.2467, "dspan_own": [-0.0006, 0.0001, 0.0008]}, "coherent": {"n": 61, "kl_real": [0.0008, 0.0015, 0.0031], "kl_kick": [0.0006, 0.0014, 0.0032], "ratio": [0.8876, 1.2581, 1.731], "share_real_above_kick": 0.672, "p_real_vs_kick": 0.015308, "p_dloss_real_vs_kick": 0.357062, "kl_real_neg": [0.0005, 0.001, 0.0023], "dloss_real": [-0.0064, 0.0003, 0.0113], "dloss_kick": [-0.0068, 0.001, 0.0109], "shift": [1.52, 2.106, 2.769], "dspan_real": [-0.0006, 0.0009, 0.0038], "dspan_kick": [-0.0019, 0.0003, 0.0037], "p_dspan_real_vs_kick": 0.1634}, "p_faded_vs_coherent_ratio": 0.9761, "p_faded_vs_stayed_ratio": 0.8834}, "sae": {"latents": 32768, "neuron_faded": {"n": 441, "probe": [0.788, 0.896, 0.968], "unit": [0.665, 0.778, 0.886], "sae": [0.655, 0.787, 0.895], "random_m": [0.649, 0.772, 0.864], "sae_minus_unit": [-0.063, 0.005, 0.077], "p_sae_vs_unit": 0.279565, "share_sae_ge_0.89": 0.263, "fires_pos": [0.75, 0.909, 1.0], "fires_neg": [0.107, 0.235, 0.415]}, "neuron_stayed": {"n": 224, "probe": [0.9055, 0.971, 0.992], "unit": [0.7885, 0.887, 0.961], "sae": [0.7758, 0.885, 0.9552], "random_m": [0.7735, 0.8665, 0.9482], "sae_minus_unit": [-0.0555, -0.0015, 0.041], "p_sae_vs_unit": 0.829398, "share_sae_ge_0.89": 0.487, "fires_pos": [0.9, 1.0, 1.0], "fires_neg": [0.062, 0.175, 0.3875]}, "neuron_random": {"n": 120, "probe": [0.4477, 0.5105, 0.5523], "unit": [0.4297, 0.4825, 0.5515], "sae": [0.485, 0.495, 0.52], "random_m": [0.4465, 0.48, 0.5315], "sae_minus_unit": [-0.0393, 0.0135, 0.07], "p_sae_vs_unit": 0.082168, "share_sae_ge_0.89": 0.0, "fires_pos": [0.15, 0.15, 0.3], "fires_neg": [0.01, 0.03, 0.1313]}, "neuron_coherent": {"n": 61, "probe": [0.59, 0.694, 0.85], "unit": [0.514, 0.589, 0.717], "sae": [0.509, 0.597, 0.7], "random_m": [0.542, 0.617, 0.685], "sae_minus_unit": [-0.067, 0.005, 0.086], "p_sae_vs_unit": 0.514325, "share_sae_ge_0.89": 0.033, "fires_pos": [0.5, 0.636, 0.824], "fires_neg": [0.112, 0.225, 0.381]}, "random_faded": {"n": 441, "probe": [0.757, 0.886, 0.96], "unit": [0.627, 0.751, 0.86], "sae": [0.632, 0.75, 0.88], "random_m": [0.642, 0.773, 0.867], "sae_minus_unit": [-0.052, 0.02, 0.08], "p_sae_vs_unit": 0.001468, "share_sae_ge_0.89": 0.227, "fires_pos": [0.75, 0.905, 1.0], "fires_neg": [0.127, 0.28, 0.491]}, "random_stayed": {"n": 223, "probe": [0.864, 0.943, 0.986], "unit": [0.69, 0.842, 0.937], "sae": [0.712, 0.85, 0.945], "random_m": [0.7165, 0.84, 0.9305], "sae_minus_unit": [-0.036, 0.015, 0.064], "p_sae_vs_unit": 0.006314, "share_sae_ge_0.89": 0.422, "fires_pos": [0.8785, 0.973, 1.0], "fires_neg": [0.0945, 0.22, 0.431]}, "random_random": {"n": 120, "probe": [0.4435, 0.491, 0.5555], "unit": [0.4387, 0.488, 0.5438], "sae": [0.484, 0.495, 0.5], "random_m": [0.4265, 0.482, 0.5328], "sae_minus_unit": [-0.05, 0.0065, 0.0542], "p_sae_vs_unit": 0.340475, "share_sae_ge_0.89": 0.0, "fires_pos": [0.15, 0.15, 0.2], "fires_neg": [0.0, 0.0205, 0.0503]}, "quality": {"6": {"fve": 0.6297, "dead_frac": 0.005, "ce": {"clean": 2.0984, "sae": 2.1258, "mean": 2.1775}, "loss_recovered": 0.6534}, "12": {"fve": 0.6561, "dead_frac": 0.1581, "ce": {"clean": 2.0984, "sae": 2.1279, "mean": 2.1761}, "loss_recovered": 0.6197}, "18": {"fve": 0.7511, "dead_frac": 0.1992, "ce": {"clean": 2.0984, "sae": 2.1326, "mean": 2.2053}, "loss_recovered": 0.6802}}}}, "sizes": {"410m": {"layers": {"6": {"neuron": {"n": 1762, "role": 0.1209, "genre": 0.0795}, "random": {"n": 1652, "role": 0.0678, "genre": 0.0508}, "p_role": 6.922833029132116e-08, "p_genre": 0.0004469468328968209}, "12": {"neuron": {"n": 1441, "role": 0.0944, "genre": 0.052}, "random": {"n": 773, "role": 0.0737, "genre": 0.0647}, "p_role": 0.05787127163680139, "p_genre": 0.9064064138343759}, "18": {"neuron": {"n": 822, "role": 0.0827, "genre": 0.056}, "random": {"n": 727, "role": 0.0509, "genre": 0.0248}, "p_role": 0.00814199163867069, "p_genre": 0.001348251293768605}, "pooled": {"neuron": {"n": 4025, "role": 0.1036, "genre": 0.0648}, "random": {"n": 3152, "role": 0.0654, "genre": 0.0482}, "p_role": 4.85704634834399e-09, "p_genre": 0.00149709344239098}}, "boot_role_excess": [0.0381, 0.0243, 0.051], "per_unit": {"neuron": {"role_adjacent": 0.271, "unparented": 2.349, "tested": 2.62}, "random": {"role_adjacent": 0.134, "unparented": 1.918, "tested": 2.052}}, "corrected_range": {"neuron": {"lo": 0.0517, "hi": 0.2846}, "random": {"lo": 0.0, "hi": 0.1163}}, "controls": [{"layer": 6, "fpr": {"genre": 0.048, "role": 0.071}, "mean_power": {"genre": 0.292, "role": 0.493}, "no_change": 0.091}, {"layer": 12, "fpr": {"genre": 0.03, "role": 0.039}, "mean_power": {"genre": 0.271, "role": 0.473}, "no_change": 0.056}, {"layer": 18, "fpr": {"genre": 0.036, "role": 0.047}, "mean_power": {"genre": 0.273, "role": 0.46}, "no_change": 0.065}], "power_corrected": {"role": {"observed_excess": 0.0382, "corrected_excess": 0.0973, "ci": [0.0678, 0.1269], "range_by_power": [0.0748, 0.1586]}, "genre": {"observed_excess": 0.0166, "corrected_excess": 0.0759, "ci": [0.0312, 0.1226], "range_by_power": [0.063, 0.0865]}, "role_minus_genre": {"corrected": 0.0214, "ci": [-0.0317, 0.0727], "share_boot_above_0": 0.799}}}, "1.4b": {"layers": {"6": {"neuron": {"n": 1173, "role": 0.0904, "genre": 0.052}, "random": {"n": 678, "role": 0.0516, "genre": 0.0398}, "p_role": 0.0013249156736711819, "p_genre": 0.14123354615332337}, "12": {"neuron": {"n": 645, "role": 0.1194, "genre": 0.062}, "random": {"n": 212, "role": 0.066, "genre": 0.0566}, "p_role": 0.01666430119888748, "p_genre": 0.46184584337919726}, "18": {"neuron": {"n": 460, "role": 0.1022, "genre": 0.0761}, "random": {"n": 198, "role": 0.0556, "genre": 0.0354}, "p_role": 0.03358112045483924, "p_genre": 0.032437703008175015}, "pooled": {"neuron": {"n": 2278, "role": 0.101, "genre": 0.0597}, "random": {"n": 1088, "role": 0.0551, "genre": 0.0423}, "p_role": 3.156293523862205e-06, "p_genre": 0.02071117571108439}}, "boot_role_excess": [0.0458, 0.0261, 0.0647], "per_unit": {"neuron": {"role_adjacent": 0.15, "unparented": 1.333, "tested": 1.483}, "random": {"role_adjacent": 0.039, "unparented": 0.669, "tested": 0.708}}, "corrected_range": {"neuron": {"lo": 0.0634, "hi": 0.2735}, "random": {"lo": 0.0, "hi": 0.0677}}, "controls": [{"layer": 6, "fpr": {"genre": 0.032, "role": 0.063}, "mean_power": {"genre": 0.284, "role": 0.484}, "no_change": 0.049}, {"layer": 12, "fpr": {"genre": 0.038, "role": 0.052}, "mean_power": {"genre": 0.244, "role": 0.446}, "no_change": 0.032}, {"layer": 18, "fpr": {"genre": 0.038, "role": 0.04}, "mean_power": {"genre": 0.245, "role": 0.444}, "no_change": 0.048}], "power_corrected": {"role": {"observed_excess": 0.0458, "corrected_excess": 0.1159, "ci": [0.0701, 0.1621], "range_by_power": [0.0914, 0.1673]}, "genre": {"observed_excess": 0.0174, "corrected_excess": 0.0764, "ci": [0.0093, 0.1411], "range_by_power": [0.0666, 0.0929]}, "role_minus_genre": {"corrected": 0.0395, "ci": [-0.0358, 0.1143], "share_boot_above_0": 0.842}}}, "difference": {"role_excess": 0.0078, "ci": [-0.0158, 0.0313], "share_above_0": 0.747}}}};
+const NS = "http://www.w3.org/2000/svg";
+const pct = (x, d = 1) => (100 * x).toFixed(d) + "%";
+const fmtP = p => p < 0.001 ? p.toExponential(0).replace("e-", " × 10⁻").replace(/\d+$/, m => [...m].map(c => "⁰¹²³⁴⁵⁶⁷⁸⁹"[c]).join("")) : p.toFixed(3);
+function el(tag, attrs = {}, text) {
+  const e = document.createElementNS(NS, tag);
+  for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+  if (text !== undefined) e.textContent = text;
+  return e;
+}
+function svg(w, h, label) { return el("svg", { viewBox: `0 0 ${w} ${h}`, role: "img", "aria-label": label }); }
+function head(box, title, sub) {
+  box.innerHTML = "";
+  const t = document.createElement("p"); t.className = "title"; t.textContent = title; box.appendChild(t);
+  if (sub) { const s = document.createElement("p"); s.className = "sub"; s.textContent = sub; box.appendChild(s); }
+}
+function legend(box, items) {
+  const l = document.createElement("div"); l.className = "legend";
+  for (const [label, color] of items) { const s = document.createElement("span"); s.innerHTML = `<i style="background:${color}"></i>${label}`; l.appendChild(s); }
+  box.appendChild(l);
+}
+
+// key figures and lede
+const pool = DATA.layers.at(-1);
+document.getElementById("lede-n").textContent = pct(pool.neuron.role[1]);
+document.getElementById("lede-r").textContent = pct(pool.random.role[1]);
+const units = 3 * 512;
+const figs = [
+  [`${pct(pool.neuron.role[1])} vs ${pct(pool.random.role[1])}`, `new jobs adjacent to an earlier job in the role space, neurons vs random directions (p = ${fmtP(pool.p.role)})`],
+  [`${(pool.neuron.role[0] / pool.random.role[0]).toFixed(1)}×`, `as many sprouts per unit in neurons (${(pool.neuron.role[0] / units).toFixed(2)} vs ${(pool.random.role[0] / units).toFixed(2)})`],
+  [`${pct(DATA.corrected.neuron.lo, 0)}–${pct(DATA.corrected.neuron.hi, 0)}`, "of new jobs in neurons truly sprout, after correcting for the test's misses"],
+  [pct(DATA.blind.neuron_adjacent[0] / DATA.blind.neuron_adjacent[1], 0), "of role-adjacent links spotted by blind readers, the same in random directions"],
+];
+const fbox = document.getElementById("figures");
+for (const [b, s] of figs) { const d = document.createElement("div"); d.className = "fig"; d.innerHTML = `<b></b><span></span>`; d.querySelector("b").textContent = b; d.querySelector("span").textContent = s; fbox.appendChild(d); }
+
+// main chart: dot and interval per layer, neurons vs random, three measures
+const MEASURES = { role: "Role space", genre: "Genre space", role_only: "Same role, different genre" };
+function drawMain(measure) {
+  const box = document.getElementById("chart-main");
+  head(box, `${MEASURES[measure]}: neurons ${pct(pool.neuron[measure][1])}, random directions ${pct(pool.random[measure][1])} pooled`, "Share of new jobs adjacent to an earlier job, by layer");
+  const seg = document.createElement("div"); seg.className = "seg"; seg.setAttribute("role", "group"); seg.setAttribute("aria-label", "Measure");
+  for (const [k, label] of Object.entries(MEASURES)) {
+    const b = document.createElement("button"); b.type = "button"; b.id = "m-" + k; b.textContent = label; b.setAttribute("aria-pressed", k === measure);
+    b.onclick = () => drawMain(k); seg.appendChild(b);
+  }
+  box.appendChild(seg);
+  legend(box, [["Neurons", "var(--neuron)"], ["Random directions", "var(--random)"]]);
+  const W = 640, row = 46, top = 10, left = 90, right = 70, H = top + row * DATA.layers.length + 30;
+  const max = 0.16, x = v => left + v / max * (W - left - right);
+  const s = svg(W, H, `${MEASURES[measure]} adjacent share by layer`);
+  for (let t = 0; t <= max + 1e-9; t += 0.04) { s.appendChild(el("line", { x1: x(t), x2: x(t), y1: top, y2: H - 26, class: "grid" })); s.appendChild(el("text", { x: x(t), y: H - 8, "text-anchor": "middle" }, pct(t, 0))); }
+  DATA.layers.forEach((r, i) => {
+    const y = top + i * row + 14;
+    s.appendChild(el("text", { x: left - 12, y: y + 9, "text-anchor": "end", class: "ink", "font-weight": r.layer === "Pooled" ? 600 : 400 }, r.layer === "Pooled" ? "Pooled" : `Layer ${r.layer}`));
+    [["neuron", "var(--neuron)", 0], ["random", "var(--random)", 16]].forEach(([b, c, dy]) => {
+      const [k, v, ci] = r[b][measure];
+      s.appendChild(el("line", { x1: x(ci[0]), x2: x(Math.min(ci[1], max)), y1: y + dy, y2: y + dy, style: `stroke:${c};stroke-width:2` }));
+      const dot = el("circle", { cx: x(v), cy: y + dy, r: 5, style: `fill:${c}` });
+      dot.appendChild(el("title", {}, `${r.layer === "Pooled" ? "Pooled" : "Layer " + r.layer}, ${b === "neuron" ? "neurons" : "random directions"}: ${k} of ${r[b].n} (${pct(v)})`));
+      s.appendChild(dot);
+    });
+    s.appendChild(el("text", { x: W - right + 8, y: y + 12 }, `p = ${fmtP(r.p[measure])}`));
+  });
+  box.appendChild(s);
+}
+drawMain("role");
+
+// main table
+(() => {
+  const t = document.getElementById("table-main");
+  t.innerHTML = `<thead><tr><th>Layer</th><th class="num">Jobs tested<br>neurons / random</th><th class="num">Role adjacent</th><th class="num">Genre adjacent</th><th class="num">Same role, different genre</th><th class="num">Role p</th></tr></thead>`;
+  const tb = document.createElement("tbody");
+  for (const r of DATA.layers) {
+    const tr = document.createElement("tr");
+    const cell = m => `${pct(r.neuron[m][1])} vs ${pct(r.random[m][1])}`;
+    tr.innerHTML = `<td>${r.layer === "Pooled" ? "<b>Pooled</b>" : r.layer}</td><td class="num">${r.neuron.n.toLocaleString()} / ${r.random.n.toLocaleString()}</td><td class="num">${cell("role")}</td><td class="num">${cell("genre")}</td><td class="num">${cell("role_only")}</td><td class="num">${fmtP(r.p.role)}</td>`;
+    tb.appendChild(tr);
+  }
+  t.appendChild(tb);
+  const b = DATA.boot;
+  if (DATA.followup) {
+  const F = DATA.followup, pw = F.power, w = F.windows, f1 = x => (100 * x).toFixed(1).replace("-", "−");
+  document.getElementById("power-text").textContent = `The role test catches more planted sprouts than the genre test (mean power ${pct(DATA.controls.reduce((s, c) => s + c.role.power.reduce((a, b) => a + b, 0) / c.role.power.length, 0) / DATA.controls.length, 0)} against ${pct(DATA.controls.reduce((s, c) => s + c.genre.power.reduce((a, b) => a + b, 0) / c.genre.power.length, 0) / DATA.controls.length, 0)}), so part of its larger excess is power. Converting each layer's shares to true sprouting shares with its own controls, neurons exceed random directions by ${f1(pw.role.corrected_excess)} points in role (95% interval ${f1(pw.role.ci[0])} to ${f1(pw.role.ci[1])}) and ${f1(pw.genre.corrected_excess)} in genre (${f1(pw.genre.ci[0])} to ${f1(pw.genre.ci[1])}). The difference, ${f1(pw.role_minus_genre.corrected)} points (${f1(pw.role_minus_genre.ci[0])} to ${f1(pw.role_minus_genre.ci[1])}), could be zero: lineage is real in both spaces, and role is not the special one.`;
+  const n = w.neuron, r = w.random;
+  document.getElementById("window-text").textContent = `Most of these jobs are born early, but so is most of everything: ${pct(n.early_share.role_adjacent, 0)} of role-adjacent jobs in neurons are born between steps 256 and 2,000, against ${pct(n.early_share.all_new, 0)} of all tested new jobs. The adjacent share is about the same early and late (${pct(n.early_vs_late_role_rate.early)} against ${pct(n.early_vs_late_role_rate.late)}), and the neuron advantage holds in each birth window through step 8,000 (${w.excess_by_window.slice(0, 3).map(x => `${x.window}: ${pct(x.neuron)} against ${pct(x.random)}`).join("; ")}).`;
+}
+document.getElementById("boot-text").textContent = `Resampling whole neurons rather than jobs, neurons exceed random directions by ${(100 * b.role[0]).toFixed(1)} points in the role space (95% interval ${(100 * b.role[1]).toFixed(1)} to ${(100 * b.role[2]).toFixed(1)}), ${(100 * b.genre[0]).toFixed(1)} in the genre space (${(100 * b.genre[1]).toFixed(1)} to ${(100 * b.genre[2]).toFixed(1)}) and ${(100 * b.role_only[0]).toFixed(1)} for same role, different genre (${(100 * b.role_only[1]).toFixed(1)} to ${(100 * b.role_only[2]).toFixed(1)}). In the genre space layer 12 goes the other way.`;
+  const un = pool.neuron.n - pool.neuron.role[0], ur = pool.random.n - pool.random.role[0];
+  document.getElementById("unit-text").textContent = `Per unit the gap is larger. Neurons yield ${(pool.neuron.role[0] / units).toFixed(2)} role-adjacent jobs each against ${(pool.random.role[0] / units).toFixed(2)} for random directions, but only ${(un / ur).toFixed(1)} times as many jobs with no parent (${(un / units).toFixed(2)} against ${(ur / units).toFixed(2)}). Random directions produce fewer jobs, perhaps because their top contexts cluster less; their equal blind accuracy on adjacent jobs argues that this does not lower their adjacency share.`;
+})();
+
+// blind chart
+(() => {
+  const B = DATA.blind, box = document.getElementById("chart-blind");
+  const a = B.neuron_adjacent, n = B.neuron_no_lineage;
+  head(box, `Readers find the parent of ${pct(a[0] / a[1], 0)} of role-adjacent jobs, in neurons and random directions alike`, "Real parent picked over a matched decoy");
+  legend(box, [["Neurons", "var(--neuron)"], ["Random directions", "var(--random)"]]);
+  const W = 640, H = 230, left = 50, base = 190, top = 20, h = base - top, y = v => base - v * h;
+  const s = svg(W, H, "Blind reader accuracy by job type and basis");
+  for (const t of [0, 0.25, 0.5, 0.75, 1]) { s.appendChild(el("line", { x1: left, x2: W - 10, y1: y(t), y2: y(t), class: t === 0.5 ? "ref" : "grid" })); s.appendChild(el("text", { x: left - 8, y: y(t) + 4, "text-anchor": "end" }, pct(t, 0))); }
+  s.appendChild(el("text", { x: W - 12, y: y(0.5) - 6, "text-anchor": "end" }, "chance"));
+  [["adjacent", "Role-adjacent jobs"], ["no_lineage", "Not adjacent"]].forEach(([strat, label], gi) => {
+    const gx = left + 70 + gi * 280;
+    [["neuron", "var(--neuron)"], ["random", "var(--random)"]].forEach(([b, c], bi) => {
+      const [k, m, ci] = B[`${b}_${strat}`], x0 = gx + bi * 70;
+      const r = el("rect", { x: x0, y: y(k / m), width: 52, height: base - y(k / m), style: `fill:${c}` });
+      r.appendChild(el("title", {}, `${label}, ${b === "neuron" ? "neurons" : "random directions"}: ${k} of ${m}`));
+      s.appendChild(r);
+      s.appendChild(el("line", { x1: x0 + 26, x2: x0 + 26, y1: y(ci[0]), y2: y(ci[1]), style: "stroke:var(--ink);stroke-width:1.5" }));
+      s.appendChild(el("text", { x: x0 + 26, y: y(ci[1]) - 6, "text-anchor": "middle", class: "ink" }, `${k}/${m}`));
+    });
+    s.appendChild(el("text", { x: gx + 61, y: base + 22, "text-anchor": "middle", class: "ink" }, label));
+  });
+  box.appendChild(s);
+  const D = B.decoy, pc = D.right_when_parent_closer, dc = D.right_when_decoy_closer;
+  document.getElementById("blind-text").textContent = `Readers see a link whenever the role test says there is one, but no better in neurons than in random directions: the neuron advantage is in how often a new job sprouts, not in how clear the link is. For jobs the test calls unrelated, readers were at chance. The decoy is not closer by construction: it was the closer candidate for ${D.decoy_closer} of ${D.n} such items, and readers simply chose whichever looked more similar (the parent ${pc[0]} of ${pc[1]} times when it was closer, ${dc[0]} of ${dc[1]} when the decoy was). That rules out a parent visible from the text, not a weaker link or one made through circuits.`;
+})();
+
+// controls table and corrected range
+(() => {
+  const t = document.getElementById("table-ctrl");
+  t.innerHTML = `<thead><tr><th>Layer</th><th class="num">Genre false positives</th><th class="num">Role false positives</th><th class="num">Genre power</th><th class="num">Role power</th></tr></thead>`;
+  const tb = document.createElement("tbody");
+  const rng = a => `${pct(Math.min(...a), 0)}–${pct(Math.max(...a), 0)}`;
+  for (const c of DATA.controls) {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td>${c.layer}</td><td class="num">${pct(c.genre.fpr)}</td><td class="num">${pct(c.role.fpr)}</td><td class="num">${rng(c.genre.power)}</td><td class="num">${rng(c.role.power)}</td>`;
+    tb.appendChild(tr);
+  }
+  t.appendChild(tb);
+  const box = document.getElementById("chart-range"), C = DATA.corrected;
+  head(box, `True sprouting share: ${pct(C.neuron.lo, 0)}–${pct(C.neuron.hi, 0)} in neurons, ${pct(C.random.lo, 0)}–${pct(C.random.hi, 0)} in random directions`, "Range consistent with the controls, role space, pooled");
+  const W = 640, H = 120, left = 150, right = 30, x = v => left + v / 0.5 * (W - left - right);
+  const s = svg(W, H, "Corrected sprouting share");
+  for (const v of [0, 0.1, 0.2, 0.3, 0.4, 0.5]) { s.appendChild(el("line", { x1: x(v), x2: x(v), y1: 6, y2: 84, class: v === 0.5 ? "ref" : "grid" })); s.appendChild(el("text", { x: x(v), y: 104, "text-anchor": "middle" }, pct(v, 0))); }
+  s.appendChild(el("text", { x: x(0.5) - 4, y: 18, "text-anchor": "end" }, "half"));
+  [["neuron", "Neurons", "var(--neuron)", 26], ["random", "Random directions", "var(--random)", 62]].forEach(([b, label, c, y]) => {
+    s.appendChild(el("text", { x: left - 12, y: y + 4, "text-anchor": "end", class: "ink" }, label));
+    s.appendChild(el("rect", { x: x(C[b].lo), y: y - 8, width: Math.max(2, x(C[b].hi) - x(C[b].lo)), height: 16, rx: 3, style: `fill:${c};fill-opacity:.35` }));
+    const d = el("circle", { cx: x(C[b].obs), cy: y, r: 5, style: `fill:${c}` });
+    d.appendChild(el("title", {}, `${label}: observed ${pct(C[b].obs)}, corrected ${pct(C[b].lo)} to ${pct(C[b].hi)}`));
+    s.appendChild(d);
+  });
+  box.appendChild(s);
+})();
+
+// neuron 1038
+(() => {
+  const N = DATA.n1038, box = document.getElementById("chart-1038");
+  head(box, "Neuron 1038 swaps jobs over 4,000 to 8,000 steps, not in one jump", "Activation on each job's contexts, share of the top-200 cutoff");
+  const names = ["XML version 1.0, new at 8,000", "Apache use, parent of XML", "fraction digits, new at 16,000", "StackExchange A:, parent of digits"];
+  const style = [["var(--neuron)", 1], ["var(--random)", 1], ["var(--neuron)", 0.5], ["var(--random)", 0.5]];
+  const W = 680, H = 300, left = 44, right = 230, top = 12, bottom = 40, ymax = 1.4;
+  const s0 = N.steps[0], s1 = N.steps.at(-1);
+  const x = st => left + (st - s0) / (s1 - s0) * (W - left - right), y = v => top + (1 - v / ymax) * (H - top - bottom);
+  const s = svg(W, H, "Neuron 1038 job activations by checkpoint");
+  for (const v of [0, 0.5, 1]) { s.appendChild(el("line", { x1: left, x2: W - right, y1: y(v), y2: y(v), class: v === 1 ? "ref" : "grid" })); s.appendChild(el("text", { x: left - 8, y: y(v) + 4, "text-anchor": "end" }, v.toFixed(1))); }
+  for (const st of [4000, 8000, 12000, 16000]) s.appendChild(el("text", { x: x(st), y: H - 18, "text-anchor": "middle" }, st.toLocaleString()));
+  s.appendChild(el("text", { x: (left + W - right) / 2, y: H - 2, "text-anchor": "middle" }, "training step"));
+  const ends = [];
+  N.share.forEach((series, j) => {
+    const [c, o] = style[j];
+    s.appendChild(el("polyline", { points: series.map((v, i) => `${x(N.steps[i])},${y(v)}`).join(" "), style: `fill:none;stroke:${c};stroke-opacity:${o};stroke-width:2` }));
+    series.forEach((v, i) => { const d = el("circle", { cx: x(N.steps[i]), cy: y(v), r: 3, style: `fill:${c};fill-opacity:${o}` }); d.appendChild(el("title", {}, `${names[j]}, step ${N.steps[i].toLocaleString()}: ${v.toFixed(2)}`)); s.appendChild(d); });
+    ends.push([y(series.at(-1)), j]);
+  });
+  ends.sort((a, b) => a[0] - b[0]);
+  let prev = -100;
+  for (const [yy, j] of ends) { const yl = Math.max(yy + 4, prev + 16); prev = yl; s.appendChild(el("text", { x: W - right + 10, y: yl, class: j % 2 === 0 ? "ink" : "" }, names[j])); }
+  box.appendChild(s);
+})();
+
+// a larger model
+(() => {
+  const Z = DATA.followup && DATA.followup.sizes;
+  if (!Z || !Z["1.4b"]) return;
+  const f1 = x => (100 * x).toFixed(1).replace("-", "−"), M = ["410m", "1.4b"];
+  let h = "<thead><tr><th>Layer</th>" + M.map(m => `<th class="num">${m}: neurons vs random</th><th class="num">p</th>`).join("") + "</tr></thead><tbody>";
+  for (const L of ["6", "12", "18", "pooled"]) {
+    h += `<tr><td>${L === "pooled" ? "Pooled" : L}</td>` + M.map(m => { const r = Z[m].layers[L]; return `<td class="num">${pct(r.neuron.role)} vs ${pct(r.random.role)}</td><td class="num">${fmtP(r.p_role)}</td>`; }).join("") + "</tr>";
+  }
+  document.getElementById("table-size").innerHTML = h + "</tbody>";
+  const a = Z["410m"], b = Z["1.4b"], d = Z.difference;
+  const ratio = s => (s.per_unit.neuron.role_adjacent / s.per_unit.random.role_adjacent).toFixed(1);
+  document.getElementById("size-text").textContent = `Resampling whole neurons, the pooled excess is ${f1(a.boot_role_excess[0])} points at 410m (95% interval ${f1(a.boot_role_excess[1])} to ${f1(a.boot_role_excess[2])}) and ${f1(b.boot_role_excess[0])} at 1.4b (${f1(b.boot_role_excess[1])} to ${f1(b.boot_role_excess[2])}). The difference, ${f1(d.role_excess)} points (${f1(d.ci[0])} to ${f1(d.ci[1])}), could be zero. Per unit the gap widens, from ${ratio(a)} to ${ratio(b)} times as many role-adjacent jobs, mostly because random directions in the wider layer form far fewer jobs at all (${b.per_unit.random.tested.toFixed(2)} tested jobs per unit, against ${b.per_unit.neuron.tested.toFixed(2)} for neurons). Corrected for the test's misses, sprouting stays a minority: about ${pct(b.corrected_range.neuron.lo, 0)} to ${pct(b.corrected_range.neuron.hi, 0)} of new jobs in neurons. Corrected for power, role and genre again come out about the same (${f1(b.power_corrected.role.corrected_excess)} against ${f1(b.power_corrected.genre.corrected_excess)} points, difference ${f1(b.power_corrected.role_minus_genre.ci[0])} to ${f1(b.power_corrected.role_minus_genre.ci[1])}).`;
+})();
+
+// faded-job probe and its three checks
+(() => {
+  const P = DATA.probe;
+  if (!P) return;
+  const F = DATA.followup && DATA.followup.fade, Z = F && F.step0;
+  const body = document.getElementById("faded-body");
+  body.innerHTML = document.getElementById("faded-template").innerHTML;
+  const box = document.getElementById("chart-probe");
+  head(box, document.getElementById("probe-title").textContent, "Median AUC (0.5 = chance). Hollow: the checkpoint before the new job appeared. Filled: the last checkpoint. Cross: the same reader on the untrained network. Dashed line: coherent non-job sets at the end");
+  legend(box, [["Faded parents", "var(--neuron)"], ["Kept parents", "var(--random)"]]);
+  const W = 680, rowH = 24, left = 190, right = 20;
+  const rows = [["probe", "Whole-layer probe"], ["best", "Best single unit"], ["own", "Its own unit"]];
+  const x = v => left + (v - 0.4) / 0.6 * (W - left - right);
+  const panels = [["neuron", "Neurons"], ["random", "Random directions"]];
+  const H = 30 + panels.length * (rows.length * 2 * rowH + 34);
+  const s = svg(W, H, "Probe and single-unit AUC before the fade, at the end, and on the untrained network");
+  let y0 = 14;
+  for (const [b, plabel] of panels) {
+    s.appendChild(el("text", { x: 0, y: y0 + 4, class: "ink", "font-weight": 600 }, plabel));
+    y0 += 16;
+    const yTop = y0;
+    for (const [m, mlabel] of rows) {
+      for (const [kind, c] of [["faded", "var(--neuron)"], ["stayed", "var(--random)"]]) {
+        const g = P.groups[`${b}_${kind}`], name = kind === "faded" ? "faded" : "kept";
+        if (!g || !g.before || !g.before[m]) { y0 += rowH; continue; }
+        const v0 = g.before[m][1], v1 = g.end[m][1], yy = y0 + rowH / 2;
+        s.appendChild(el("text", { x: left - 10, y: yy + 4, "text-anchor": "end", class: kind === "faded" ? "ink" : "" }, `${mlabel}, ${name}`));
+        s.appendChild(el("line", { x1: x(v0), x2: x(v1), y1: yy, y2: yy, style: `stroke:${c};stroke-width:2` }));
+        const z = Z && Z[`${b}_${kind}`] && Z[`${b}_${kind}`][`${m}_step0`];
+        if (z) {
+          const zx = x(z[1]), cr = el("g", {});
+          cr.appendChild(el("line", { x1: zx - 4, x2: zx + 4, y1: yy - 4, y2: yy + 4, style: `stroke:${c};stroke-width:1.8` }));
+          cr.appendChild(el("line", { x1: zx - 4, x2: zx + 4, y1: yy + 4, y2: yy - 4, style: `stroke:${c};stroke-width:1.8` }));
+          cr.appendChild(el("title", {}, `${plabel}, ${mlabel}, ${name}: untrained ${z[1].toFixed(2)}`));
+          s.appendChild(cr);
+        }
+        const a0 = el("circle", { cx: x(v0), cy: yy, r: 4.5, style: `fill:var(--surface);stroke:${c};stroke-width:2` });
+        a0.appendChild(el("title", {}, `${plabel}, ${mlabel}, ${name}: before ${v0.toFixed(2)}`)); s.appendChild(a0);
+        const a1 = el("circle", { cx: x(v1), cy: yy, r: 4.5, style: `fill:${c}` });
+        a1.appendChild(el("title", {}, `${plabel}, ${mlabel}, ${name}: end ${v1.toFixed(2)}`)); s.appendChild(a1);
+        y0 += rowH;
+      }
+    }
+    s.appendChild(el("line", { x1: x(P.control.probe[1]), x2: x(P.control.probe[1]), y1: yTop, y2: y0, class: "ref" }));
+    y0 += 18;
+  }
+  for (const v of [0.4, 0.6, 0.8, 1.0]) s.appendChild(el("text", { x: x(v), y: H - 4, "text-anchor": "middle" }, v.toFixed(1)));
+  box.appendChild(s);
+
+  const tb = document.getElementById("table-fade-tests");
+  if (!tb || !F || !F.ablate || !F.ablate_all || !F.sae) return;
+  const A = F.ablate, AA = F.ablate_all, S = F.sae, f2 = v => v.toFixed(2), f4 = v => v < 0.00005 ? "< 0.0001" : v.toFixed(4), ms = v => (1000 * v).toFixed(1);
+  const cols = [["faded", "Faded jobs"], ["stayed", "Kept jobs"], ["coherent", "Non-job sets"]];
+  const zk = k => k === "coherent" ? Z.coherent : Z[`neuron_${k}`];
+  const checks = [
+    ["Whole-layer probe, untrained → trained (AUC)", k => `${f2(zk(k).probe_step0[1])} → ${f2(zk(k).probe_end[1])}`],
+    ["Remove the job's direction at its position: change in prediction (KL, nats), removed vs a random push of the same size", k => `${f4(A[k].kl_real[1])} vs ${f4(A[k].kl_kick[1])}`],
+    ["Remove it at every position: change in loss over the next 16 tokens (10⁻³ nats), removed vs push", k => `${ms(AA[k].dspan_real[1])} vs ${ms(AA[k].dspan_kick[1])}`],
+    ["Reset the job's own neuron at every position: change in prediction (KL, nats)", k => k === "coherent" ? "—" : f4(AA[k].kl_own[1])],
+    ["Best single direction (AUC): SAE feature · neuron · best of 32,768 random", k => { const v = S[`neuron_${k}`]; return `${f2(v.sae[1])} · ${f2(v.unit[1])} · ${f2(v.random_m[1])}`; }],
+  ];
+  let h = "<thead><tr><th>Check</th>" + cols.map(c => `<th class="num">${c[1]}</th>`).join("") + "</tr></thead><tbody>";
+  for (const [label, fn] of checks) h += `<tr><td>${label}</td>` + cols.map(c => `<td class="num">${fn(c[0])}</td>`).join("") + "</tr>";
+  tb.innerHTML = h + "</tbody>";
+})();
+</script>

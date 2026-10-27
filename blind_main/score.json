@@ -1,0 +1,128 @@
+{
+ "answered": 150,
+ "of": 150,
+ "neuron": {
+  "all": {
+   "correct": 56,
+   "n": 75,
+   "accuracy": 0.747,
+   "ci95": [
+    0.638,
+    0.831
+   ],
+   "p_vs_half": 0.0
+  },
+  "confident (3)": {
+   "correct": 17,
+   "n": 19,
+   "accuracy": 0.895,
+   "ci95": [
+    0.686,
+    0.971
+   ],
+   "p_vs_half": 0.0004
+  },
+  "genre adjacent": {
+   "correct": 10,
+   "n": 10,
+   "accuracy": 1.0,
+   "ci95": [
+    0.722,
+    1.0
+   ],
+   "p_vs_half": 0.001
+  },
+  "genre no_lineage": {
+   "correct": 46,
+   "n": 65,
+   "accuracy": 0.708,
+   "ci95": [
+    0.588,
+    0.804
+   ],
+   "p_vs_half": 0.0005
+  },
+  "role adjacent": {
+   "correct": 41,
+   "n": 45,
+   "accuracy": 0.911,
+   "ci95": [
+    0.793,
+    0.965
+   ],
+   "p_vs_half": 0.0
+  },
+  "role no_lineage": {
+   "correct": 15,
+   "n": 30,
+   "accuracy": 0.5,
+   "ci95": [
+    0.332,
+    0.668
+   ],
+   "p_vs_half": 0.5722
+  }
+ },
+ "random": {
+  "all": {
+   "correct": 53,
+   "n": 75,
+   "accuracy": 0.707,
+   "ci95": [
+    0.596,
+    0.798
+   ],
+   "p_vs_half": 0.0002
+  },
+  "confident (3)": {
+   "correct": 12,
+   "n": 14,
+   "accuracy": 0.857,
+   "ci95": [
+    0.601,
+    0.96
+   ],
+   "p_vs_half": 0.0065
+  },
+  "genre adjacent": {
+   "correct": 11,
+   "n": 12,
+   "accuracy": 0.917,
+   "ci95": [
+    0.646,
+    0.985
+   ],
+   "p_vs_half": 0.0032
+  },
+  "genre no_lineage": {
+   "correct": 42,
+   "n": 63,
+   "accuracy": 0.667,
+   "ci95": [
+    0.544,
+    0.771
+   ],
+   "p_vs_half": 0.0056
+  },
+  "role adjacent": {
+   "correct": 41,
+   "n": 45,
+   "accuracy": 0.911,
+   "ci95": [
+    0.793,
+    0.965
+   ],
+   "p_vs_half": 0.0
+  },
+  "role no_lineage": {
+   "correct": 12,
+   "n": 30,
+   "accuracy": 0.4,
+   "ci95": [
+    0.246,
+    0.577
+   ],
+   "p_vs_half": 0.8998
+  }
+ }
+}
